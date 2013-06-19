@@ -92,6 +92,7 @@ public class ReminderActivity extends Activity {
 		// ---deletes the alarm to trigger---
 		
 		alarmManager.cancel(alarmIntent);
+		finish();
     	
     	Intent intent = new Intent(this, MainActivity.class);
     	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
