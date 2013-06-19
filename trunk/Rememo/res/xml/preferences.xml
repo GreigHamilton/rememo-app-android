@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory
+        android:key="pref_set_colour"
+        android:title="Reminder Colour" >
+
+        <com.greighamilton.rememo.data.ColourDialogPreference
+            android:dialogMessage="Choose colour for reminders."
+            android:key="pref_set_"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="Save Colour"
+            android:summary="Choose colour for reminders."
+            android:title="Set Colour" >
+        </com.greighamilton.rememo.data.ColourDialogPreference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

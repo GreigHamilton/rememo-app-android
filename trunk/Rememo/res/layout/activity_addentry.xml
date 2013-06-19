@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @author	Greig Hamilton -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+    <LinearLayout
+            android:id="@+id/entry_linearlayout_1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+        <!-- Name -->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="NAME"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/blue1" />
+
+        <!-- Name -->
+        <EditText
+                android:id="@+id/entry_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Name (e.g. Dentist Appointment)" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:text="DATE AND TIME"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/blue1" />
+
+        <LinearLayout
+                android:id="@+id/addentry_linearlayout_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+            <!-- Date -->
+            <Button
+                    android:id="@+id/entry_date"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="selectDate"
+                    android:padding="10dp"
+                    android:text="Date"
+                    android:layout_weight="1"/>
+
+            <!-- Time -->
+            <Button
+                    android:id="@+id/entry_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="selectTime"
+                    android:padding="10dp"
+                    android:text="Time"
+                    android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- Category -->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:text="HIGHLIGHTING"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/blue1" />
+
+        <LinearLayout
+                android:id="@+id/entry_linearlayout_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+            <RadioGroup
+                    android:id="@+id/entry_radiogroup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+            </RadioGroup>
+        </LinearLayout>
+
+
+
+
+
+        <!-- Repetition -->
+
+        <!-- Notes -->
+
+        <CheckBox
+            android:id="@+id/entry_circled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Circled" />
+
+        <CheckBox
+            android:id="@+id/entry_underlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Underlined" />
+
+        <CheckBox
+            android:id="@+id/entry_starred"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Starred" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:text="NOTES"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/blue1" />
+
+        <EditText
+                android:id="@+id/entry_notes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Additional Info (Optional)"
+                android:inputType="textMultiLine" />
+    </LinearLayout>
+
+</ScrollView>
