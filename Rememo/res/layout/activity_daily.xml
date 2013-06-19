@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dashboard_daily"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/grid_of_widgets_daily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:horizontalSpacing="15dp"
+        android:numColumns="1"
+        android:padding="10dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="15dp" >
+    </GridView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff3f3f3"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/daily_today"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Today"
+            android:onClick="clickToday" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff3f3f3"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/daily_yesterday"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Yesterday"
+                android:onClick="clickYesterday" />
+
+            <Button
+                android:id="@+id/daily_tomorrow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tomorrow"
+                android:onClick="clickTomorrow" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
