@@ -3,12 +3,15 @@ package com.greighamilton.rememo;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -67,7 +70,8 @@ public class MainActivity extends Activity {
         setUpWidgets();
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	private void setUpWidgets() {
 
         widgets.clear();
@@ -76,6 +80,8 @@ public class MainActivity extends Activity {
         
         Cursor allEventsCursor = db.getEventsByDate(selectedWeekStartDate, selectedWeekEndDate, true);
         allEventsCursor.moveToFirst();
+        
+        
         
         if (db.isDatabaseEmpty()) setContentView(R.layout.activity_main_welcome);
 		else {
@@ -115,6 +121,7 @@ public class MainActivity extends Activity {
 		        Cursor eventsCursor = db.getEventsByDate(currentCursorDate, Util.getTomorrowsDate(currentCursorDate), true);
 		        eventsCursor.moveToFirst();
 		        
+		        
 		        while (!eventsCursor.isAfterLast()) {
 		        	LinearLayout diaryLine = new LinearLayout(this);
 		        	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
@@ -124,10 +131,28 @@ public class MainActivity extends Activity {
 							.getString(DatabaseHelper.EVENT_DATE_TIME)
 							.substring(11, 16)) + " \t \t ");
 		        	
+		        	
 		        	TextView eventText = new TextView(this);
-					eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
+		        	eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
 					
 					eventText.setPadding(35, 0, 0, 0);
+					
+					// check if event has been done
+		        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
+		        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		        	}
+		        	
+		        	// check for customisation options (underline, circle, star)
+		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+		        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+		        	}
+		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
+		        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+		        	}
+		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
+		        		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
+		        	}
+		        	
 					
 					// add to linear layout holder
 					diaryLine.addView(eventPaddingTime);

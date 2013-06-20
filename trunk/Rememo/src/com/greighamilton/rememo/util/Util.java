@@ -16,7 +16,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import android.text.format.Time;
-import android.util.Log;
 
 /**
  * Class for collection of helper methods used throughout all classes.
@@ -458,8 +457,6 @@ public class Util {
 		int day = Integer.parseInt(date.substring(8, 10));
 		int month = Integer.parseInt(date.substring(5, 7))-1;
 		int year = Integer.parseInt(date.substring(0, 4));
-		
-		Log.i("MONTH", ""+month);
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, day);

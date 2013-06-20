@@ -3,9 +3,11 @@ package com.greighamilton.rememo;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,7 +69,8 @@ public class DailyActivity extends Activity {
         setUpWidgets();
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	private void setUpWidgets() {
 
         widgets.clear();
@@ -122,6 +125,25 @@ public class DailyActivity extends Activity {
         	TextView eventText = new TextView(this);
 			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
 			
+			
+			// check if event has been done
+        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
+        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        	}
+        	
+        	// check for customisation options (underline, circle, star)
+        	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+        	}
+        	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
+        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        	}
+        	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
+        		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
+        	}
+			
+			
+			// notes
 			TextView eventPaddingNotes = new TextView(this);
 			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
         	
