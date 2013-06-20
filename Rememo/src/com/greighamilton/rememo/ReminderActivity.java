@@ -41,6 +41,8 @@ public class ReminderActivity extends Activity {
 	private String colourString;
 	
 	private int eventId;
+	private String eventName;
+	private String eventDate;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,42 +58,73 @@ public class ReminderActivity extends Activity {
         reminderText.setText(getIntent().getExtras().getString("EventName"));
         
         LinearLayout reminderBackground = (LinearLayout) findViewById(R.id.reminder_colour);
-        reminderBackground.setBackgroundColor(Color.parseColor(colourString));
+        try {
+        	reminderBackground.setBackgroundColor(Color.parseColor(colourString));
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	reminderBackground.setBackgroundColor(Color.GRAY);
+        }
         
-        String fullDateTime = getIntent().getExtras().getString("EventDate");
-        eventId = getIntent().getExtras().getInt("EventID");
+        
+        eventDate = getIntent().getExtras().getString("EventDate");
+        eventId = getIntent().getExtras().getInt("EventId");
+        eventName = getIntent().getExtras().getString("EventName");
         
         //Log.i("FULL", fullDateTime);
         
-        year = Integer.parseInt(fullDateTime.substring(0, 4));
-        month = Integer.parseInt(fullDateTime.substring(5, 7));
-        day = Integer.parseInt(fullDateTime.substring(8, 10));
-        hour = Integer.parseInt(fullDateTime.substring(11, 13));
-        minute = Integer.parseInt(fullDateTime.substring(14, 16));
+        year = Integer.parseInt(eventDate.substring(0, 4));
+        month = Integer.parseInt(eventDate.substring(5, 7));
+        day = Integer.parseInt(eventDate.substring(8, 10));
+        hour = Integer.parseInt(eventDate.substring(11, 13));
+        minute = Integer.parseInt(eventDate.substring(14, 16));
         
         // ---look up the notification manager service---
      	NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
      	// ---cancel the notification---
-     	nm.cancel(getIntent().getExtras().getInt("NotifID"));
+     	nm.cancel(getIntent().getExtras().getInt("EventId"));
      	
     }
     
     public void clickReminderDone(View v) {
     	
-    	// TODO
     	alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     	
-    	// ---PendingIntent to launch activity when the alarm triggers-
+    	// ---PendingIntent to launch activity when the alarm
+		// triggers---
+		Intent i = new Intent(
+				"com.greighamilton.rememo.reminders.DisplayNotification");
+
+		// ---assign an ID ---
+		i.putExtra("EventId", eventId);
+		i.putExtra("EventName", eventName);
+		i.putExtra("EventDate", eventDate);
+
+		PendingIntent notificationIntent = PendingIntent.getActivity(
+				getBaseContext(), eventId, i, 0);
+
+
+		// ---PendingIntent to launch activity when the alarm triggers-
 		Intent j = new Intent(
 				"com.greighamilton.rememo.ReminderActivity");
-		j.putExtra("EventName", getIntent().getExtras().getString("EventName"));
+		j.putExtra("EventName", eventName);
+		j.putExtra("EventId", eventId);
+		j.putExtra("EventDate", eventDate);
+		
 		PendingIntent alarmIntent = PendingIntent.getActivity(
 				getBaseContext(), eventId, j, 0);
+
 
 		// ---deletes the alarm to trigger---
 		
 		alarmManager.cancel(alarmIntent);
+		alarmManager.cancel(notificationIntent);
+		
+		
+		// add this event to complete events
+		db.addToCompleteEvents(eventId);
+		
+		
 		finish();
     	
     	Intent intent = new Intent(this, MainActivity.class);
@@ -103,16 +136,35 @@ public class ReminderActivity extends Activity {
     	
     	alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     	
-    	// ---PendingIntent to launch activity when the alarm triggers-
+    	// ---PendingIntent to launch activity when the alarm
+		// triggers---
+		Intent i = new Intent(
+				"com.greighamilton.rememo.reminders.DisplayNotification");
+
+		// ---assign an ID ---
+		i.putExtra("EventId", eventId);
+		i.putExtra("EventName", eventName);
+		i.putExtra("EventDate", eventDate);
+
+		PendingIntent notificationIntent = PendingIntent.getActivity(
+				getBaseContext(), eventId, i, 0);
+
+
+		// ---PendingIntent to launch activity when the alarm triggers-
 		Intent j = new Intent(
 				"com.greighamilton.rememo.ReminderActivity");
-		j.putExtra("EventName", getIntent().getExtras().getString("EventName"));
+		j.putExtra("EventName", eventName);
+		j.putExtra("EventId", eventId);
+		j.putExtra("EventDate", eventDate);
+		
 		PendingIntent alarmIntent = PendingIntent.getActivity(
 				getBaseContext(), eventId, j, 0);
+
 
 		// ---deletes the alarm to trigger---
 		
 		alarmManager.cancel(alarmIntent);
+		alarmManager.cancel(notificationIntent);
     	
     	DialogFragment newFragment = new PostponeReminderPickerFragment();
 		newFragment.show(getFragmentManager(), "postponePicker");
@@ -187,7 +239,9 @@ public class ReminderActivity extends Activity {
 									"com.greighamilton.rememo.reminders.DisplayNotification");
 
 							// ---assign an ID ---
-							i.putExtra("NotifID", eventId);
+							i.putExtra("EventId", eventId);
+							i.putExtra("EventName", eventName);
+							i.putExtra("EventDate", eventDate);
 
 							PendingIntent notificationIntent = PendingIntent.getActivity(
 									getBaseContext(), eventId, i, 0);
@@ -199,7 +253,10 @@ public class ReminderActivity extends Activity {
 							// ---PendingIntent to launch activity when the alarm triggers-
 							Intent j = new Intent(
 									"com.greighamilton.rememo.ReminderActivity");
-							j.putExtra("EventName", getIntent().getExtras().getString("EventName"));
+							j.putExtra("EventName", eventName);
+							j.putExtra("EventId", eventId);
+							j.putExtra("EventDate", eventDate);
+							
 							PendingIntent alarmIntent = PendingIntent.getActivity(
 									getBaseContext(), eventId, j, 0);
 

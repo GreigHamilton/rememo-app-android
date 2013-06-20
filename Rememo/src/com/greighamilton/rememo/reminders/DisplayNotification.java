@@ -25,18 +25,22 @@ public class DisplayNotification extends Activity {
 
 		// ---get the notification ID for the notification;
 		// passed in by the MainActivity---
-		int notifID = getIntent().getExtras().getInt("NotifID");
+		int eventId = getIntent().getExtras().getInt("EventId");
+		String eventDate = getIntent().getExtras().getString("EventDate");
+		String eventName = getIntent().getExtras().getString("EventName");
 
 		// ---PendingIntent to launch activity if the user selects
 		// the notification---
 		Intent i = new Intent(this, MainActivity.class);
-		i.putExtra("NotifID", notifID);
+		i.putExtra("EventId", eventId);
+		i.putExtra("EventDate", eventDate);
+		i.putExtra("EventName", eventName);
 
-		PendingIntent detailsIntent = PendingIntent.getActivity(this, notifID, i, 0);
+		PendingIntent detailsIntent = PendingIntent.getActivity(this, eventId, i, 0);
 
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Notification notif = new Notification(R.drawable.ic_launcher,
-				db.getEventName(notifID), System.currentTimeMillis()); // TODO actual message
+				db.getEventName(eventId), System.currentTimeMillis()); // TODO actual message
 		
 		// Cancel the notification after its selected
 		notif.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -52,13 +56,13 @@ public class DisplayNotification extends Activity {
 		notif.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		CharSequence from = "Rememo";
-		CharSequence message = "Remember " + db.getEventName(notifID);
+		CharSequence message = "Remember " + eventName;
 		notif.setLatestEventInfo(this, from, message, detailsIntent);
 
 		// ---100ms delay, vibrate for 250ms, pause for 100 ms and
 		// then vibrate for 500ms---
 		notif.vibrate = new long[] { 100, 250, 100, 500 };
-		nm.notify(notifID, notif);
+		nm.notify(eventId, notif);
 		// ---destroy the activity---
 		finish();
 	}

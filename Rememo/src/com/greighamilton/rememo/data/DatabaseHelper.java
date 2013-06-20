@@ -44,6 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final int EVENT_UNDERLINE = 4;
 	public static final int EVENT_STARRED = 5;
 	public static final int EVENT_NOTES = 6;
+	
+	public static final int COMPLETE_EVENT_ID = 0;
 
 	
 	
@@ -338,7 +340,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public String getEventName(int index) {
 		Cursor c = db.rawQuery("SELECT * FROM EVENT WHERE _id = " + index,
 				null);
-		String name = "nothing :(";
+		String name = " ";
 		c.moveToFirst();
 		return (!c.isAfterLast()) ? c.getString(EVENT_NAME) : name;
 	}
@@ -368,6 +370,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	        }
 	    }
 	    return false;
+	}
+	
+	
+	
+	public int addToCompleteEvents(int nextId) {
+		ContentValues cv = new ContentValues(1);
+		cv.put("_id", nextId);
+
+		return (int) db.insert("COMPLETE_EVENT", null, cv);
+	}
+	
+	public boolean isEventComplete(int id) {
+		
+		Cursor c = db.rawQuery("SELECT * FROM COMPLETE_EVENT WHERE _id=" + id, null);
+		c.moveToLast();
+		
+		int count1 = c.getCount();
+		if (count1 == 0) {
+			return false;
+
+		} else {
+			return true;
+		}
 	}
 	
 	

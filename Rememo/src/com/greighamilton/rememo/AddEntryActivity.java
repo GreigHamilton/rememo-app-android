@@ -148,27 +148,7 @@ public class AddEntryActivity extends Activity {
 				calendar.set(Calendar.HOUR_OF_DAY, hour);
 				calendar.set(Calendar.MINUTE, minute);
 				calendar.set(Calendar.SECOND, 0);
-
-				// ---PendingIntent to launch activity when the alarm
-				// triggers---
-				Intent i = new Intent(
-						"com.greighamilton.rememo.reminders.DisplayNotification");
-
-				// ---assign an ID of 1---
-				int nextId = db.nextEventID();
-				i.putExtra("NotifID", nextId);
-
-				PendingIntent notificationIntent = PendingIntent.getActivity(
-						getBaseContext(), nextId, i, 0);
-
-				// ---sets the alarm to trigger---
-				alarmManager.set(AlarmManager.RTC_WAKEUP,
-						calendar.getTimeInMillis(), notificationIntent);
-
-				// ---PendingIntent to launch activity when the alarm triggers-
-				Intent j = new Intent(
-						"com.greighamilton.rememo.ReminderActivity");
-				j.putExtra("EventName", name);
+				
 				String dateTimeText = year + "-";
 				if (month < 10)
 					dateTimeText += "0" + month + "-";
@@ -190,8 +170,30 @@ public class AddEntryActivity extends Activity {
 					dateTimeText += minute;
 				dateTimeText += ":00.000";
 
+				// ---PendingIntent to launch activity when the alarm
+				// triggers---
+				Intent i = new Intent(
+						"com.greighamilton.rememo.reminders.DisplayNotification");
+
+				// ---assign an ID of 1---
+				int nextId = db.nextEventID();
+				i.putExtra("EventId", nextId);
+				i.putExtra("EventName", name);
+				i.putExtra("EventDate", dateTimeText);
+
+				PendingIntent notificationIntent = PendingIntent.getActivity(
+						getBaseContext(), nextId, i, 0);
+
+				// ---sets the alarm to trigger---
+				alarmManager.set(AlarmManager.RTC_WAKEUP,
+						calendar.getTimeInMillis(), notificationIntent);
+
+				// ---PendingIntent to launch activity when the alarm triggers-
+				Intent j = new Intent(
+						"com.greighamilton.rememo.ReminderActivity");
+				j.putExtra("EventName", name);
 				j.putExtra("EventDate", dateTimeText);
-				j.putExtra("EventID", nextId);
+				j.putExtra("EventId", nextId);
 				
 				PendingIntent alarmIntent = PendingIntent.getActivity(
 						getBaseContext(), nextId, j, 0);
