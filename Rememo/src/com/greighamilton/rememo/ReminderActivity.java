@@ -1,5 +1,6 @@
 package com.greighamilton.rememo;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
@@ -10,13 +11,17 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,21 +48,32 @@ public class ReminderActivity extends Activity {
 	private int eventId;
 	private String eventName;
 	private String eventDate;
+	
+	private SharedPreferences sp;
+	
+	
+	private TextView reminderText;
+	private LinearLayout reminderBackground;
+	private Button changeButton;
+	private Button doneButton;
+	private Button laterButton;
+	
+	private MediaPlayer mp;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_reminder);
         
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());	
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());	
         colourString = sp.getString("COLOUR", "");
         
         db = DatabaseHelper.getInstance(this);
         
-        TextView reminderText = (TextView) findViewById(R.id.reminder_text);
+        reminderText = (TextView) findViewById(R.id.reminder_text);
         reminderText.setText(getIntent().getExtras().getString("EventName"));
         
-        LinearLayout reminderBackground = (LinearLayout) findViewById(R.id.reminder_colour);
+        reminderBackground = (LinearLayout) findViewById(R.id.reminder_colour);
         try {
         	reminderBackground.setBackgroundColor(Color.parseColor(colourString));
         } catch (Exception e) {
@@ -84,6 +100,46 @@ public class ReminderActivity extends Activity {
      	// ---cancel the notification---
      	nm.cancel(getIntent().getExtras().getInt("EventId"));
      	
+     	
+     	// hide buttons and text on screen until clicked
+     	changeButton = (Button) findViewById(R.id.reminder_change);
+     	changeButton.setVisibility(View.GONE);
+     	
+    	doneButton = (Button) findViewById(R.id.reminder_done);
+    	doneButton.setVisibility(View.GONE);
+    	
+    	laterButton = (Button) findViewById(R.id.reminder_later);
+    	laterButton.setVisibility(View.GONE);
+    	
+    	reminderText.setVisibility(View.GONE);
+    	
+    	// start music and vibration TODO
+    	int resource = R.raw.friends;
+    	mp = MediaPlayer.create(this, resource);
+    	
+    	try {
+			mp.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+        mp.start();
+    }
+    
+    public void clickReminderScreen(View v) {
+    	changeButton.setVisibility(View.VISIBLE);
+     	
+    	doneButton.setVisibility(View.VISIBLE);
+    	
+    	laterButton.setVisibility(View.VISIBLE);
+    	
+    	reminderText.setVisibility(View.VISIBLE);
+    	
+    	mp.stop();
     }
     
     public void clickReminderDone(View v) {
@@ -168,6 +224,11 @@ public class ReminderActivity extends Activity {
     	
     	DialogFragment newFragment = new PostponeReminderPickerFragment();
 		newFragment.show(getFragmentManager(), "postponePicker");
+    }
+    
+    public void clickReminderChange(View v) {
+    	DialogFragment newFragment = new ChangeReminderPickerFragment();
+		newFragment.show(getFragmentManager(), "changePicker");
     }
     
     /**
@@ -270,6 +331,94 @@ public class ReminderActivity extends Activity {
 							Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 					    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					    	startActivity(intent);
+						}
+					});
+			return builder.create();
+		}
+	}
+	
+	/**
+	 * Class for reminder picker fragment.
+	 * 
+	 * @author Greig Hamilton
+	 *
+	 */
+	@SuppressLint("ValidFragment")
+	public class ChangeReminderPickerFragment extends DialogFragment {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle("What colour would you like to change it to?");
+			
+			// get items for dialog
+			final String[] colours;
+			
+			colours = getResources().getStringArray(R.array.reminder_colours);
+			
+			builder.setItems(colours,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
+							// The 'which' argument contains the index position
+							// of the selected item
+							
+							LinearLayout reminderBackground = (LinearLayout) findViewById(R.id.reminder_colour);
+							
+							if (colours[item].equals("Red")) {
+								
+								sp.edit().putString("COLOUR", "#F21818").commit();
+								
+								try {
+						        	reminderBackground.setBackgroundColor(Color.parseColor("#F21818"));
+						        } catch (Exception e) {
+						        	e.printStackTrace();
+						        	reminderBackground.setBackgroundColor(Color.GRAY);
+						        }
+							}
+							if (colours[item].equals("Green")) {
+								
+								sp.edit().putString("COLOUR", "#3ECF4F").commit();
+								
+								try {
+						        	reminderBackground.setBackgroundColor(Color.parseColor("#3ECF4F"));
+						        } catch (Exception e) {
+						        	e.printStackTrace();
+						        	reminderBackground.setBackgroundColor(Color.GRAY);
+						        }
+							}
+							if (colours[item].equals("Blue")) {
+								
+								sp.edit().putString("COLOUR", "#1885F2").commit();
+								
+								try {
+						        	reminderBackground.setBackgroundColor(Color.parseColor("#1885F2"));
+						        } catch (Exception e) {
+						        	e.printStackTrace();
+						        	reminderBackground.setBackgroundColor(Color.GRAY);
+						        }
+							}
+							if (colours[item].equals("Yellow")) {
+								
+								sp.edit().putString("COLOUR", "#F5F50C").commit();
+								
+								try {
+						        	reminderBackground.setBackgroundColor(Color.parseColor("#F5F50C"));
+						        } catch (Exception e) {
+						        	e.printStackTrace();
+						        	reminderBackground.setBackgroundColor(Color.GRAY);
+						        }
+							}
+							if (colours[item].equals("Orange")) {
+								
+								sp.edit().putString("COLOUR", "#FFAB19").commit();
+								
+								try {
+						        	reminderBackground.setBackgroundColor(Color.parseColor("#FFAB19"));
+						        } catch (Exception e) {
+						        	e.printStackTrace();
+						        	reminderBackground.setBackgroundColor(Color.GRAY);
+						        }
+							}
 						}
 					});
 			return builder.create();

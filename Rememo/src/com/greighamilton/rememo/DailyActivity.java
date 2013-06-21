@@ -94,9 +94,9 @@ public class DailyActivity extends Activity {
 					R.drawable.diary_border));
 		
 		// identify subwidgets
-		TextView day = (TextView) widget.findViewById(R.id.day_text);
-		TextView date = (TextView) widget.findViewById(R.id.date_text);
-		LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container);
+		TextView day = (TextView) widget.findViewById(R.id.day_text_daily);
+		TextView date = (TextView) widget.findViewById(R.id.date_text_daily);
+		LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container_daily);
 
 		// day
 		day.setText(" "+Util.getDayOfWeek(selectedDate));
@@ -110,65 +110,66 @@ public class DailyActivity extends Activity {
         Cursor eventsCursor = db.getEventsByDate(selectedDate, Util.getTomorrowsDate(selectedDate), true);
         eventsCursor.moveToFirst();
         
-        while (!eventsCursor.isAfterLast()) {		        	
-        	LinearLayout diaryLine = new LinearLayout(this);
-        	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
+        while (!eventsCursor.isAfterLast()) {
         	
-        	LinearLayout notesLine = new LinearLayout(this);
-        	notesLine.setOrientation(LinearLayout.HORIZONTAL);
-        	
-        	TextView eventPaddingTime = new TextView(this);
-        	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
-					.getString(DatabaseHelper.EVENT_DATE_TIME)
-					.substring(11, 16)) + " \t \t ");
-        	
-        	TextView eventText = new TextView(this);
-			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
-			
-			
-			// check if event has been done
-        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
-        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        	}
-        	
-        	// check for customisation options (underline, circle, star)
-        	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
-        	}
-        	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
-        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        	}
-        	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
-        		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
-        	}
-			
-			
-			// notes
-			TextView eventPaddingNotes = new TextView(this);
-			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
-        	
-        	TextView notesText = new TextView(this);
-        	notesText.setText("Notes: " + eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
-			
-			eventText.setPadding(35, 0, 0, 0);
-			
-			// add to linear layout holder
-			diaryLine.addView(eventPaddingTime);
-			diaryLine.addView(eventText);
-			
-			notesLine.addView(eventPaddingNotes);
-			notesLine.addView(notesText);
-			
-			TextView paddingNotes = new TextView(this);
-			paddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
-			
-			// add line holder to events holder
-			eventsHolder.addView(diaryLine);
-			if (!eventsCursor.getString(DatabaseHelper.EVENT_NOTES).equals("")) eventsHolder.addView(notesLine);
-			else eventsHolder.addView(paddingNotes);
-			
-			
-			eventsCursor.moveToNext();
+        	// get events that are complete and skip
+//        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
+//        		eventsCursor.moveToNext();
+//        	}
+//        	
+//        	else {
+        		LinearLayout diaryLine = new LinearLayout(this);
+            	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
+            	
+            	LinearLayout notesLine = new LinearLayout(this);
+            	notesLine.setOrientation(LinearLayout.HORIZONTAL);
+            	
+            	TextView eventPaddingTime = new TextView(this);
+            	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
+    					.getString(DatabaseHelper.EVENT_DATE_TIME)
+    					.substring(11, 16)) + " \t \t ");
+            	
+            	TextView eventText = new TextView(this);
+    			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
+    			
+    			TextView eventPaddingNotes = new TextView(this);
+    			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
+            	
+            	TextView notesText = new TextView(this);
+            	notesText.setText("Notes: " + eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
+    			
+    			eventText.setPadding(35, 0, 0, 0);
+    			
+            	
+            	// check for customisation options (underline, circle, star)
+            	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+            		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+            	}
+            	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
+            		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            	}
+            	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
+            		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
+            	}
+    			
+    			// add to linear layout holder
+    			diaryLine.addView(eventPaddingTime);
+    			diaryLine.addView(eventText);
+    			
+    			notesLine.addView(eventPaddingNotes);
+    			notesLine.addView(notesText);
+    			
+    			TextView paddingNotes = new TextView(this);
+    			paddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
+    			
+    			// add line holder to events holder
+    			eventsHolder.addView(diaryLine);
+    			if (!eventsCursor.getString(DatabaseHelper.EVENT_NOTES).equals("")) eventsHolder.addView(notesLine);
+    			else eventsHolder.addView(paddingNotes);
+    			
+    			
+    			eventsCursor.moveToNext();
+//        	}
         }
 		
 		// add widget
@@ -182,7 +183,10 @@ public class DailyActivity extends Activity {
 			grid.invalidateViews();
 		}
 		
+		// Build widgets that are already complete!
+		// TODO
     }
+    
 
 
 	@Override

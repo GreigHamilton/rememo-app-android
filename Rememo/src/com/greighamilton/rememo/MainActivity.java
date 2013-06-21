@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
 
 				// identify subwidgets
 				TextView day = (TextView) widget.findViewById(R.id.day_text);
-				TextView date = (TextView) widget.findViewById(R.id.date_text);
+				TextView date = (TextView) widget.findViewById(R.id.main_date_text);
 				LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container);
 
 				// day
@@ -181,6 +181,8 @@ public class MainActivity extends Activity {
 				grid.invalidateViews();
 			}
 		}
+        
+        
 	}
 
     @Override
