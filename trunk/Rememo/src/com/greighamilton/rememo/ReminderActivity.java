@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
+import com.greighamilton.rememo.util.Util;
 
 /**
  * Created by Greig on 10/06/13.
@@ -48,6 +49,10 @@ public class ReminderActivity extends Activity {
 	private int eventId;
 	private String eventName;
 	private String eventDate;
+	private int circled;
+	private int underlined;
+	private int starred;
+	private String eventNotes;
 	
 	private SharedPreferences sp;
 	
@@ -85,6 +90,10 @@ public class ReminderActivity extends Activity {
         eventDate = getIntent().getExtras().getString("EventDate");
         eventId = getIntent().getExtras().getInt("EventId");
         eventName = getIntent().getExtras().getString("EventName");
+        circled = getIntent().getExtras().getInt("EventCircled");
+		underlined = getIntent().getExtras().getInt("EventUnderlined");
+		starred = getIntent().getExtras().getInt("EventStarred");
+		eventNotes = getIntent().getExtras().getString("EventNotes");
         
         //Log.i("FULL", fullDateTime);
         
@@ -114,7 +123,7 @@ public class ReminderActivity extends Activity {
     	reminderText.setVisibility(View.GONE);
     	
     	// start music and vibration TODO
-    	int resource = R.raw.friends;
+    	int resource = sp.getInt("MUSIC", R.raw.friends); // set default
     	mp = MediaPlayer.create(this, resource);
     	
     	try {
@@ -155,6 +164,10 @@ public class ReminderActivity extends Activity {
 		i.putExtra("EventId", eventId);
 		i.putExtra("EventName", eventName);
 		i.putExtra("EventDate", eventDate);
+		i.putExtra("EventCircled", circled);
+		i.putExtra("EventUnderlined", underlined);
+		i.putExtra("EventStarred", starred);
+		i.putExtra("EventNotes", eventNotes);
 
 		PendingIntent notificationIntent = PendingIntent.getActivity(
 				getBaseContext(), eventId, i, 0);
@@ -166,6 +179,10 @@ public class ReminderActivity extends Activity {
 		j.putExtra("EventName", eventName);
 		j.putExtra("EventId", eventId);
 		j.putExtra("EventDate", eventDate);
+		j.putExtra("EventCircled", circled);
+		j.putExtra("EventUnderlined", underlined);
+		j.putExtra("EventStarred", starred);
+		j.putExtra("EventNotes", eventNotes);
 		
 		PendingIntent alarmIntent = PendingIntent.getActivity(
 				getBaseContext(), eventId, j, 0);
@@ -201,6 +218,10 @@ public class ReminderActivity extends Activity {
 		i.putExtra("EventId", eventId);
 		i.putExtra("EventName", eventName);
 		i.putExtra("EventDate", eventDate);
+		i.putExtra("EventCircled", circled);
+		i.putExtra("EventUnderlined", underlined);
+		i.putExtra("EventStarred", starred);
+		i.putExtra("EventNotes", eventNotes);
 
 		PendingIntent notificationIntent = PendingIntent.getActivity(
 				getBaseContext(), eventId, i, 0);
@@ -212,6 +233,10 @@ public class ReminderActivity extends Activity {
 		j.putExtra("EventName", eventName);
 		j.putExtra("EventId", eventId);
 		j.putExtra("EventDate", eventDate);
+		j.putExtra("EventCircled", circled);
+		j.putExtra("EventUnderlined", underlined);
+		j.putExtra("EventStarred", starred);
+		j.putExtra("EventNotes", eventNotes);
 		
 		PendingIntent alarmIntent = PendingIntent.getActivity(
 				getBaseContext(), eventId, j, 0);
@@ -284,6 +309,12 @@ public class ReminderActivity extends Activity {
 							if (delayTimes[item].equals("Tomorrow")) {
 								calendar.add(Calendar.DAY_OF_MONTH, 1);
 								Toast.makeText(getApplicationContext(), "You will be reminded again tomorrow.", Toast.LENGTH_LONG).show();
+								
+								// increment the date and update the event
+								String tomorrowDate = Util.getTomorrowsDate(eventDate);
+								String tomorrowTime = eventDate.substring(11);
+								String timeTomorrow = tomorrowDate + " " + tomorrowTime;
+								db.updateEvent(eventId, eventName, timeTomorrow, circled, underlined, starred, eventNotes);
 							}
 							
 							// ------------------------------------
@@ -303,6 +334,10 @@ public class ReminderActivity extends Activity {
 							i.putExtra("EventId", eventId);
 							i.putExtra("EventName", eventName);
 							i.putExtra("EventDate", eventDate);
+							i.putExtra("EventCircled", circled);
+							i.putExtra("EventUnderlined", underlined);
+							i.putExtra("EventStarred", starred);
+							i.putExtra("EventNotes", eventNotes);
 
 							PendingIntent notificationIntent = PendingIntent.getActivity(
 									getBaseContext(), eventId, i, 0);
@@ -317,6 +352,10 @@ public class ReminderActivity extends Activity {
 							j.putExtra("EventName", eventName);
 							j.putExtra("EventId", eventId);
 							j.putExtra("EventDate", eventDate);
+							j.putExtra("EventCircled", circled);
+							j.putExtra("EventUnderlined", underlined);
+							j.putExtra("EventStarred", starred);
+							j.putExtra("EventNotes", eventNotes);
 							
 							PendingIntent alarmIntent = PendingIntent.getActivity(
 									getBaseContext(), eventId, j, 0);

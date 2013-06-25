@@ -94,7 +94,7 @@ public class Util {
 	 */
 	public static String getCurrentWeekDates() {
 		
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -107,10 +107,9 @@ public class Util {
 		    calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		
-		String startWeek = days[0].substring(6) + "-" + days[0].substring(0, 2) + "-" + days[0].substring(3, 5);
+		String startWeek = days[0].substring(0, 4) + "-" + days[0].substring(5, 7) + "-" + days[0].substring(8);
 		
-		int endDay = Integer.parseInt(days[6].substring(3, 5))+1;
-		String endWeek = days[6].substring(6) + "-" + days[6].substring(0, 2) + "-" + endDay;
+		String endWeek = Util.getTomorrowsDate(days[6]);
 
 		return startWeek + "#" + endWeek;
 		
@@ -483,7 +482,7 @@ public class Util {
 		int month = Integer.parseInt(date.substring(5, 7))-1;
 		int year = Integer.parseInt(date.substring(0, 4));
 
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -497,9 +496,9 @@ public class Util {
 		    calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		
-		String startWeek = days[0].substring(6) + "-" + days[0].substring(0, 2) + "-" + days[0].substring(3, 5);
+		String startWeek = days[0].substring(0, 4) + "-" + days[0].substring(5, 7) + "-" + days[0].substring(8);
 		
-		String endWeek = days[6].substring(6) + "-" + days[6].substring(0, 2) + "-" + days[6].substring(3, 5);
+		String endWeek = days[6].substring(0, 4) + "-" + days[6].substring(5, 7) + "-" + days[6].substring(8);
 
 		return startWeek + "#" + endWeek;
 	}
@@ -510,7 +509,7 @@ public class Util {
 		int month = Integer.parseInt(date.substring(5, 7))-1;
 		int year = Integer.parseInt(date.substring(0, 4));
 
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -524,9 +523,9 @@ public class Util {
 		    calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		
-		String startWeek = days[0].substring(6) + "-" + days[0].substring(0, 2) + "-" + days[0].substring(3, 5);
+		String startWeek = days[0].substring(0, 4) + "-" + days[0].substring(5, 7) + "-" + days[0].substring(8);
 		
-		String endWeek = days[6].substring(6) + "-" + days[6].substring(0, 2) + "-" + days[6].substring(3, 5);
+		String endWeek = days[6].substring(0, 4) + "-" + days[6].substring(5, 7) + "-" + days[6].substring(8);
 
 		return startWeek + "#" + endWeek;
 	}

@@ -5,12 +5,14 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,18 +44,15 @@ public class DailyActivity extends Activity {
 		String dateSelected;
 
 		if (extras != null) {
-			dateSelected = extras.getString("date");
-			//currentDate = dateSelected;
-			Log.i("DAILY DATE", dateSelected);
+			dateSelected = extras.getString("SelectedDate");
+			selectedDate = dateSelected;
+		}
+		else {
+			currentDate = Util.getTodaysDate();
+			selectedDate = currentDate;
 		}
 		
-			currentDate = Util.getTodaysDate();
-		
-		
-		selectedDate = currentDate;
-
 		setContentView(R.layout.activity_daily);
-		
 	}
 
 	
@@ -72,6 +71,8 @@ public class DailyActivity extends Activity {
     @SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	private void setUpWidgets() {
+    	
+    	setTitle(Util.getDayOfWeek(selectedDate) + ": " + selectedDate.substring(8, 10) + " " + Util.getMonthText(selectedDate) + " " + selectedDate.substring(0, 4));
 
         widgets.clear();
 
@@ -95,62 +96,137 @@ public class DailyActivity extends Activity {
 		
 		// identify subwidgets
 		TextView day = (TextView) widget.findViewById(R.id.day_text_daily);
-		TextView date = (TextView) widget.findViewById(R.id.date_text_daily);
 		LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container_daily);
 
 		// day
-		day.setText(" "+Util.getDayOfWeek(selectedDate));
+		day.setText("Incomplete Tasks");
 		day.setTypeface(null, Typeface.BOLD);
-
-		// date
-		date.setText("  "+selectedDate.substring(8, 10) + " " + Util.getMonthText(selectedDate) + " " + selectedDate.substring(0, 4));
-		date.setTypeface(null, Typeface.ITALIC);
 		
 		// events
         Cursor eventsCursor = db.getEventsByDate(selectedDate, Util.getTomorrowsDate(selectedDate), true);
         eventsCursor.moveToFirst();
         
+        TextView incompleteNoEvents = (TextView) widget.findViewById(R.id.noevents_text_incomplete);
+        incompleteNoEvents.setVisibility(View.GONE);
+        
+        if (eventsCursor.isAfterLast())
+        	incompleteNoEvents.setVisibility(View.VISIBLE);
+        
         while (!eventsCursor.isAfterLast()) {
         	
-        	// get events that are complete and skip
-//        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
-//        		eventsCursor.moveToNext();
-//        	}
-//        	
-//        	else {
+        	incompleteNoEvents.setVisibility(View.GONE);
+        	
+        	
+        	if (!db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
         		LinearLayout diaryLine = new LinearLayout(this);
-            	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
-            	
-            	LinearLayout notesLine = new LinearLayout(this);
-            	notesLine.setOrientation(LinearLayout.HORIZONTAL);
-            	
-            	TextView eventPaddingTime = new TextView(this);
-            	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
+    	    	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
+    	    	
+    	    	
+    	    	LinearLayout notesLine = new LinearLayout(this);
+    	    	notesLine.setOrientation(LinearLayout.HORIZONTAL);
+    	    	
+    	    	TextView eventPaddingTime = new TextView(this);
+    	    	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
     					.getString(DatabaseHelper.EVENT_DATE_TIME)
     					.substring(11, 16)) + " \t \t ");
-            	
-            	TextView eventText = new TextView(this);
+    	    	
+    	    	TextView eventText = new TextView(this);
     			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
     			
     			TextView eventPaddingNotes = new TextView(this);
     			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
-            	
-            	TextView notesText = new TextView(this);
-            	notesText.setText("Notes: " + eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
+    	    	
+    	    	TextView notesText = new TextView(this);
+    	    	notesText.setText("Notes: " + eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
     			
     			eventText.setPadding(35, 0, 0, 0);
     			
-            	
-            	// check for customisation options (underline, circle, star)
-            	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-            		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
-            	}
-            	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
-            		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            	}
-            	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
-            		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
-            	}
+    	    	
+    	    	// check for customisation options (underline, circle, star)
+    	    	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+    	    		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+    	    	}
+    	    	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
+    	    		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    	    	}
+    	    	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
+    	    		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
+    	    	}
+    	    	
+    	    	// set on click listener for diary line
+    	    	diaryLine.setTag(R.id.diary_daily_id, eventsCursor.getInt(DatabaseHelper.EVENT_ID));
+    	    	diaryLine.setTag(R.id.diary_daily_name, eventsCursor.getString(DatabaseHelper.EVENT_NAME));
+    	    	diaryLine.setTag(R.id.diary_daily_datetime, eventsCursor.getString(DatabaseHelper.EVENT_DATE_TIME));
+    	    	diaryLine.setTag(R.id.diary_daily_circled, eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED));
+    	    	diaryLine.setTag(R.id.diary_daily_underlined, eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE));
+    	    	diaryLine.setTag(R.id.diary_daily_starred, eventsCursor.getInt(DatabaseHelper.EVENT_STARRED));
+    	    	diaryLine.setTag(R.id.diary_daily_notes, eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
+    	    	
+    	    	diaryLine.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                    	
+                    	final int eventId = (Integer) v.getTag(R.id.diary_daily_id);
+                    	final String eventName = (String) v.getTag(R.id.diary_daily_name);
+                    	final String eventDateTime = (String) v.getTag(R.id.diary_daily_datetime);
+                    	final int eventCircled = (Integer) v.getTag(R.id.diary_daily_circled);
+                    	final int eventUnderlined = (Integer) v.getTag(R.id.diary_daily_underlined);
+                    	final int eventStarred = (Integer) v.getTag(R.id.diary_daily_starred);
+                    	final String eventNotes = (String) v.getTag(R.id.diary_daily_notes);
+                    	
+                    	// show dialog box for edit / delete options
+                    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                				v.getContext());
+                 
+                			// set title
+                			alertDialogBuilder.setTitle(eventName);
+                 
+                			// set dialog message
+                			alertDialogBuilder
+                				.setMessage("Would you like to edit or delete your reminder for " + eventName+"?")
+                				.setCancelable(false)
+                				.setPositiveButton("Delete",new DialogInterface.OnClickListener() {
+                					public void onClick(DialogInterface dialog,int id) {
+                						
+                						// TODO delete the notification and reminder!!
+                						
+                						// delete event from db and close
+                						
+                						db.deleteEvent(eventId);
+                						setUpWidgets();
+                					}
+                				  })
+                				.setNegativeButton("Edit",new DialogInterface.OnClickListener() {
+                					public void onClick(DialogInterface dialog,int id) {
+                						// if this button is clicked, just close
+                						// the dialog box and do nothing
+                						dialog.cancel();
+                						// TODO delete the original reminder and notification!!
+                						
+                						// launch add activity with details pre-filled and update database event
+                						
+                						Intent i = new Intent(DailyActivity.this, AddEntryActivity.class);
+                						i.putExtra("eventId", eventId);
+                						i.putExtra("eventName", eventName);
+                						i.putExtra("eventDateTime", eventDateTime);
+                						i.putExtra("eventCircled", eventCircled);
+                						i.putExtra("eventUnderlined", eventUnderlined);
+                						i.putExtra("eventStarred", eventStarred);
+                						i.putExtra("eventNotes", eventNotes);
+                						startActivity(i);
+                						DailyActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                					}
+                				});
+                 
+                				// create alert dialog
+                				AlertDialog alertDialog = alertDialogBuilder.create();
+                 
+                				// show it
+                				alertDialog.show();
+                    	
+                     }
+                    });
     			
     			// add to linear layout holder
     			diaryLine.addView(eventPaddingTime);
@@ -166,10 +242,104 @@ public class DailyActivity extends Activity {
     			eventsHolder.addView(diaryLine);
     			if (!eventsCursor.getString(DatabaseHelper.EVENT_NOTES).equals("")) eventsHolder.addView(notesLine);
     			else eventsHolder.addView(paddingNotes);
+        	}
+        		
+			eventsCursor.moveToNext();
+			
+			if (eventsHolder.getChildCount() == 0)
+				incompleteNoEvents.setVisibility(View.VISIBLE);
+        }
+        
+        
+        // -------------------------------------------------------------------------------------
+        
+        // add completed tasks to layout
+        
+        LinearLayout completeEventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container_daily_complete);
+
+        // identify subwidgets
+ 		TextView complete = (TextView) widget.findViewById(R.id.day_text_daily_complete);
+ 		complete.setTextColor(Color.GRAY);
+
+ 		// day
+ 		complete.setText("Complete Tasks");
+ 		complete.setTypeface(null, Typeface.BOLD);
+		
+ 		Cursor eventsCursorComplete = db.getEventsByDate(selectedDate, Util.getTomorrowsDate(selectedDate), true);
+ 		eventsCursorComplete.moveToFirst();
+        
+ 		TextView completeNoEvents = (TextView) widget.findViewById(R.id.noevents_text_complete);
+ 		completeNoEvents.setVisibility(View.GONE);
+ 		completeNoEvents.setTextColor(Color.GRAY);
+ 		
+ 		if (eventsCursorComplete.isAfterLast())
+ 			completeNoEvents.setVisibility(View.VISIBLE);
+        
+        while (!eventsCursorComplete.isAfterLast()) {
+        	
+        	if (db.isEventComplete(eventsCursorComplete.getInt(DatabaseHelper.EVENT_ID))) {
+        		LinearLayout diaryLine = new LinearLayout(this);
+    	    	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
+    	    	
+    	    	LinearLayout notesLine = new LinearLayout(this);
+    	    	notesLine.setOrientation(LinearLayout.HORIZONTAL);
+    	    	
+    	    	TextView eventPaddingTime = new TextView(this);
+    	    	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursorComplete
+    					.getString(DatabaseHelper.EVENT_DATE_TIME)
+    					.substring(11, 16)) + " \t \t ");
+    	    	eventPaddingTime.setTextColor(Color.GRAY);
+    	    	
+    	    	TextView eventText = new TextView(this);
+    			eventText.setText(eventsCursorComplete.getString(DatabaseHelper.EVENT_NAME));
+    			eventText.setTextColor(Color.GRAY);
     			
+    			TextView eventPaddingNotes = new TextView(this);
+    			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
+    	    	
+    	    	TextView notesText = new TextView(this);
+    	    	notesText.setText("Notes: " + eventsCursorComplete.getString(DatabaseHelper.EVENT_NOTES));
+    	    	notesText.setTextColor(Color.GRAY);
     			
-    			eventsCursor.moveToNext();
-//        	}
+    			eventText.setPadding(35, 0, 0, 0);
+    			
+    			// check if event has been done
+	        	if (db.isEventComplete(eventsCursorComplete.getInt(DatabaseHelper.EVENT_ID))) {
+	        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+	        	}
+    			
+    	    	
+    	    	// check for customisation options (underline, circle, star)
+    	    	if (eventsCursorComplete.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+    	    		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+    	    	}
+    	    	if (eventsCursorComplete.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
+    	    		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    	    	}
+    	    	if (eventsCursorComplete.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
+    	    		eventText.setText(eventsCursorComplete.getString(DatabaseHelper.EVENT_NAME) + " *");
+    	    	}
+    			
+    			// add to linear layout holder
+    			diaryLine.addView(eventPaddingTime);
+    			diaryLine.addView(eventText);
+    			
+    			notesLine.addView(eventPaddingNotes);
+    			notesLine.addView(notesText);
+    			
+    			TextView paddingNotes = new TextView(this);
+    			paddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
+    			
+    			// add line holder to events holder
+    			completeEventsHolder.addView(diaryLine);
+    			if (!eventsCursorComplete.getString(DatabaseHelper.EVENT_NOTES).equals("")) completeEventsHolder.addView(notesLine);
+    			else completeEventsHolder.addView(paddingNotes);
+        	}
+        	
+        	eventsCursorComplete.moveToNext();
+        	
+        	if (completeEventsHolder.getChildCount() == 0)
+        		completeNoEvents.setVisibility(View.VISIBLE);
         }
 		
 		// add widget
@@ -182,9 +352,6 @@ public class DailyActivity extends Activity {
 			((WidgetAdapter) grid.getAdapter()).setWidgets(widgets);
 			grid.invalidateViews();
 		}
-		
-		// Build widgets that are already complete!
-		// TODO
     }
     
 

@@ -10,8 +10,6 @@ import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +34,8 @@ public class MainActivity extends Activity {
 
     private List<LinearLayout> widgets;
     
+    private String selectedDate;
+    
 	private DatabaseHelper db;
     
     private String currentWeekStartDate;
@@ -58,6 +58,8 @@ public class MainActivity extends Activity {
         
         selectedWeekStartDate = currentWeekStartDate;
         selectedWeekEndDate = currentWeekEndDate;
+        
+        selectedDate = null;
     }
 
     @Override
@@ -66,6 +68,12 @@ public class MainActivity extends Activity {
 
         db = DatabaseHelper.getInstance(this);
         widgets = new ArrayList<LinearLayout>();
+        
+        String[] thisWeekDates = Util.getCurrentWeekDates().split("#");
+        currentWeekStartDate = thisWeekDates[0];
+        currentWeekEndDate = thisWeekDates[1];
+        
+        selectedDate = null;
 
         setUpWidgets();
     }
@@ -122,15 +130,15 @@ public class MainActivity extends Activity {
 		        eventsCursor.moveToFirst();
 		        
 		        
+		        
 		        while (!eventsCursor.isAfterLast()) {
+		        	
 		        	LinearLayout diaryLine = new LinearLayout(this);
 		        	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
-		        	
 		        	TextView eventPaddingTime = new TextView(this);
 		        	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
 							.getString(DatabaseHelper.EVENT_DATE_TIME)
 							.substring(11, 16)) + " \t \t ");
-		        	
 		        	
 		        	TextView eventText = new TextView(this);
 		        	eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
@@ -163,7 +171,7 @@ public class MainActivity extends Activity {
 					eventsCursor.moveToNext();
 		        }
 		        
-		        widget.setTag(R.id.diary_date, date);
+		        widget.setTag(R.id.diary_date, currentCursorDate);
 				
 				// add widget
 				widgets.add(widget);
@@ -202,12 +210,6 @@ public class MainActivity extends Activity {
             case R.id.action_addentry:
                 i = new Intent(MainActivity.this,
                         AddEntryActivity.class);
-                MainActivity.this.startActivity(i);
-                break;
-            
-            case R.id.action_daily:
-                i = new Intent(MainActivity.this,
-                        DailyActivity.class);
                 MainActivity.this.startActivity(i);
                 break;
 
@@ -289,6 +291,15 @@ public class MainActivity extends Activity {
     }
     
 	public void clickWidget(View v) {
-		// TODO
+		
+		// get info from widget view
+		LinearLayout selectedWidget = (LinearLayout) v;
+		String date = (String) selectedWidget.getTag(R.id.diary_date);
+		selectedDate = date;
+		
+		Intent i = new Intent(MainActivity.this, DailyActivity.class);
+		i.putExtra("SelectedDate", selectedDate);
+		startActivity(i);
+		MainActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 	}
 }

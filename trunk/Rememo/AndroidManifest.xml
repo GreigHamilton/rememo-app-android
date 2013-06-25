@@ -55,6 +55,7 @@
         <activity
             android:name="com.greighamilton.rememo.data.SettingsActivity"
             android:label="Settings" />
+        
         <activity android:name=".DailyActivity"
             android:label="@string/title_activity_daily"
             android:parentActivityName="com.greighamilton.rememo.MainActivity">
