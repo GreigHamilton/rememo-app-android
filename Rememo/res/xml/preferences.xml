@@ -7,12 +7,26 @@
 
         <com.greighamilton.rememo.data.ColourDialogPreference
             android:dialogMessage="Choose colour for reminders."
-            android:key="pref_set_"
+            android:key="pref_set_colour"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Colour"
             android:summary="Choose colour for reminders."
             android:title="Set Colour" >
         </com.greighamilton.rememo.data.ColourDialogPreference>
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:key="pref_set_music"
+        android:title="Reminder Music" >
+
+        <com.greighamilton.rememo.data.MusicDialogPreference
+            android:dialogMessage="Choose music for reminders."
+            android:key="pref_set_music"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="Save Music"
+            android:summary="Choose music for reminders."
+            android:title="Set Music" >
+        </com.greighamilton.rememo.data.MusicDialogPreference>
     </PreferenceCategory>
 
 </PreferenceScreen>

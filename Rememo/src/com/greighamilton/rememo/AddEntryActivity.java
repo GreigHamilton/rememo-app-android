@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
@@ -38,6 +39,9 @@ public class AddEntryActivity extends Activity {
     private static int hour;
     
     private DatabaseHelper db;
+    
+    private Bundle extras;
+    private int currentId;
     
     private AlarmManager alarmManager;
 
@@ -68,6 +72,46 @@ public class AddEntryActivity extends Activity {
         
         minute = Util.getCurrentMinute();
         hour = Util.getCurrentHour();
+        
+        // check if entras (i.e. it is an edit)
+        extras = getIntent().getExtras();
+
+        if (extras != null) {
+        	
+            currentId = extras.getInt("eventId");
+            String eventName = extras.getString("eventName");
+            String eventDateTime = extras.getString("eventDateTime");
+            String eventDate = eventDateTime.substring(8, 10) + "-" + eventDateTime.substring(5, 7) + "-" + eventDateTime.substring(0, 4);
+            String eventTime = eventDateTime.substring(11, 13) + ":" + eventDateTime.substring(14, 16);
+            int eventCircled = extras.getInt("eventCircled");
+        	int eventUnderlined = extras.getInt("eventUnderlined");
+        	int eventStarred = extras.getInt("eventStarred");
+        	String eventNotes = extras.getString("eventNotes");
+            
+        	TextView editEventName = (TextView) findViewById(R.id.entry_name);
+        	editEventName.setText(eventName);
+            
+            Button editEventDate = (Button) findViewById(R.id.entry_date);
+            editEventDate.setText(eventDate);
+            
+            Button editEventTime = (Button) findViewById(R.id.entry_time);
+            editEventTime.setText(eventTime);
+           
+            CheckBox editEventCircled = (CheckBox) findViewById(R.id.entry_circled);
+            if (eventCircled == 1) editEventCircled.setChecked(true);
+            else editEventCircled.setChecked(false);
+            	
+            CheckBox editEventUnderlined = (CheckBox) findViewById(R.id.entry_underlined);
+            if (eventUnderlined == 1) editEventUnderlined.setChecked(true);
+            else editEventUnderlined.setChecked(false);
+            
+            CheckBox editEventStarred = (CheckBox) findViewById(R.id.entry_starred);
+            if (eventStarred == 1) editEventStarred.setChecked(true);
+            else editEventStarred.setChecked(false);
+            
+            TextView editEventNotes = (TextView) findViewById(R.id.entry_notes);
+            editEventNotes.setText(eventNotes);
+        }
     }
 
 	@Override
@@ -180,6 +224,10 @@ public class AddEntryActivity extends Activity {
 				i.putExtra("EventId", nextId);
 				i.putExtra("EventName", name);
 				i.putExtra("EventDate", dateTimeText);
+				i.putExtra("EventCircled", circled);
+				i.putExtra("EventUnderlined", underlined);
+				i.putExtra("EventStarred", starred);
+				i.putExtra("EventNotes", notes);
 
 				PendingIntent notificationIntent = PendingIntent.getActivity(
 						getBaseContext(), nextId, i, 0);
@@ -194,6 +242,10 @@ public class AddEntryActivity extends Activity {
 				j.putExtra("EventName", name);
 				j.putExtra("EventDate", dateTimeText);
 				j.putExtra("EventId", nextId);
+				j.putExtra("EventCircled", circled);
+				j.putExtra("EventUnderlined", underlined);
+				j.putExtra("EventStarred", starred);
+				j.putExtra("EventNotes", notes);
 				
 				PendingIntent alarmIntent = PendingIntent.getActivity(
 						getBaseContext(), nextId, j, 0);
@@ -204,9 +256,14 @@ public class AddEntryActivity extends Activity {
 
 				// ----------------------------------
 
-				// add event to db
-				db.addEvent(nextId, name, date_time, circled, underlined,
-						starred, notes);
+				if (extras != null) {
+					db.updateEvent(currentId, name, date_time, circled, underlined, starred, notes);
+				}
+				else {
+					// add event to db
+					db.addEvent(nextId, name, dateTimeText, circled, underlined, starred, notes);
+				}
+				
 
 				finish();
 			}

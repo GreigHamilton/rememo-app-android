@@ -14,14 +14,6 @@
             android:id="@+id/day_text_daily"
             android:layout_gravity="left|center_vertical"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/date_text_daily"
-            android:layout_gravity="left|center_vertical"/>
-
     <LinearLayout
         android:id="@+id/diary_appointments_container_daily"
         android:layout_width="match_parent"
@@ -29,10 +21,81 @@
         android:orientation="vertical" >
     </LinearLayout>
     
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\t \t \t \t \t \t \t No events to show. \n"
+            android:id="@+id/noevents_text_incomplete"
+            android:layout_gravity="left|center_vertical"/>
+    
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/day_text_daily_complete"
+            android:layout_gravity="left|center_vertical"/>
+    
+    <LinearLayout
+        android:id="@+id/diary_appointments_container_daily_complete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
+    
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\t \t \t \t \t \t \t No events to show. \n"
+            android:id="@+id/noevents_text_complete"
+            android:layout_gravity="left|center_vertical"/>
+    
     <!-- NOT PART OF THIS VIEW - JUST HERE FOR THE R.ID TAGS -->
     
     <LinearLayout
-    	android:id="@+id/diary_date_daily"
+    	android:id="@+id/diary_daily_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_circled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_underlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_starred"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_notes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

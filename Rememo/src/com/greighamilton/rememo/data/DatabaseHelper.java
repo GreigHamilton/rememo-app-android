@@ -395,6 +395,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public Cursor getEventsByDate(String date, boolean ascendingOrder) {
+		Log.i("DATE DB", date);
+		String clause = null;
+		String order = (ascendingOrder) ? "date_time asc" : "date_time desc";
+		
+		if (date != null) {
+			clause = " date_time = '" + date + "'";
+		}
+		
+		
+		return db.query("EVENT", null, clause, null, null, null, order);
+	}
+
+	public void updateEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes) {
+		
+		ContentValues cv = new ContentValues(7);
+		cv.put("_id", nextId);
+		cv.put("name", name);
+		cv.put("date_time", date_time);
+		cv.put("circled", circled);
+		cv.put("underlined", underlined);
+		cv.put("starred", starred);
+		cv.put("notes", notes);
+
+		db.update("EVENT", cv, "_id="+nextId, null);
+	}
+	
+	public void deleteEvent(int id) {
+		db.delete("EVENT", "_id="+id, null);
+	}
+	
 	
 	
 	
@@ -449,25 +480,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-	public Cursor getEventsByDate(String date, boolean ascendingOrder) {
-		Log.i("DATE DB", date);
-		String clause = null;
-		String order = (ascendingOrder) ? "date_time asc" : "date_time desc";
-		
-		if (date != null) {
-			clause = " date_time = '" + date + "'";
-		}
-		
-		
-		return db.query("EVENT", null, clause, null, null, null, order);
-	}
-
-
-
-
-
-
-
 	
-
 }
