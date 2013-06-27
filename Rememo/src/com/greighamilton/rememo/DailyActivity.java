@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,6 +37,8 @@ public class DailyActivity extends Activity {
     private String currentDate;
     
     private String selectedDate;
+    
+    private AlarmManager alarmManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -191,8 +195,8 @@ public class DailyActivity extends Activity {
                 						
                 						// TODO delete the notification and reminder!!
                 						
-                						// delete event from db and close
                 						
+                						// delete event from db and close
                 						db.deleteEvent(eventId);
                 						setUpWidgets();
                 					}
@@ -202,7 +206,6 @@ public class DailyActivity extends Activity {
                 						// if this button is clicked, just close
                 						// the dialog box and do nothing
                 						dialog.cancel();
-                						// TODO delete the original reminder and notification!!
                 						
                 						// launch add activity with details pre-filled and update database event
                 						

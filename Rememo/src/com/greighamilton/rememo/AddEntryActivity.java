@@ -257,6 +257,10 @@ public class AddEntryActivity extends Activity {
 				// ----------------------------------
 
 				if (extras != null) {
+					// remove the original reminder and notification
+					removeReminder(currentId, name, dateTimeText, circled, underlined, starred, notes);
+					
+					// update the database
 					db.updateEvent(currentId, name, date_time, circled, underlined, starred, notes);
 				}
 				else {
@@ -270,6 +274,44 @@ public class AddEntryActivity extends Activity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void removeReminder(int id, String name, String dateTimeText, int circled, int underlined, int starred, String notes) {
+		// remove the original reminder and notification
+		Intent i = new Intent(
+				"com.greighamilton.rememo.reminders.DisplayNotification");
+
+		// ---assign an ID of 1---
+		i.putExtra("EventId", id);
+		i.putExtra("EventName", name);
+		i.putExtra("EventDate", dateTimeText);
+		i.putExtra("EventCircled", circled);
+		i.putExtra("EventUnderlined", underlined);
+		i.putExtra("EventStarred", starred);
+		i.putExtra("EventNotes", notes);
+
+		PendingIntent notificationIntent = PendingIntent.getActivity(
+				getBaseContext(), id, i, 0);
+
+		// ---sets the alarm to trigger---
+		alarmManager.cancel(notificationIntent);
+
+		// ---PendingIntent to launch activity when the alarm triggers-
+		Intent j = new Intent(
+				"com.greighamilton.rememo.ReminderActivity");
+		j.putExtra("EventName", name);
+		j.putExtra("EventDate", dateTimeText);
+		j.putExtra("EventId", id);
+		j.putExtra("EventCircled", circled);
+		j.putExtra("EventUnderlined", underlined);
+		j.putExtra("EventStarred", starred);
+		j.putExtra("EventNotes", notes);
+		
+		PendingIntent alarmIntent = PendingIntent.getActivity(
+				getBaseContext(), id, j, 0);
+
+		// ---sets the alarm to trigger---
+		alarmManager.cancel(alarmIntent);
 	}
 
 	public void selectDate(View view) {
