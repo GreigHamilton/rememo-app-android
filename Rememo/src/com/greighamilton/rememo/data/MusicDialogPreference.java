@@ -45,6 +45,12 @@ public class MusicDialogPreference extends DialogPreference {
     public void onClick (DialogInterface dialog, int which) {
         if (DialogInterface.BUTTON_POSITIVE == which) {
         	
+        	// musicons
+        	RadioButton musicZero = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_zero);
+        	if (musicZero.isChecked()) {
+        		sp.edit().putInt("MUSIC", 0).commit();
+        	}
+        	
         	RadioButton musicOne = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_one);
         	if (musicOne.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.canon).commit();
@@ -68,6 +74,32 @@ public class MusicDialogPreference extends DialogPreference {
         	RadioButton musicFive = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_five);
         	if (musicFive.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.jurassicpark).commit();	
+        	}
+        	
+        	// earcons
+        	RadioButton alertOne = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_one);
+        	if (alertOne.isChecked()) {
+        		sp.edit().putInt("MUSIC", R.raw.earcon1).commit();
+        	}
+        	
+        	RadioButton alertTwo = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_two);
+        	if (alertTwo.isChecked()) {
+        		sp.edit().putInt("MUSIC", R.raw.earcon2).commit();
+        	}
+        	
+        	RadioButton alertThree = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_three);
+        	if (alertThree.isChecked()) {
+        		sp.edit().putInt("MUSIC", R.raw.earcon2).commit();
+        	}
+        	
+        	RadioButton alertFour = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_four);
+        	if (alertFour.isChecked()) {
+        		sp.edit().putInt("MUSIC", R.raw.earcon3).commit();
+        	}
+        	
+        	RadioButton alertFive = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_five);
+        	if (alertFive.isChecked()) {
+        		sp.edit().putInt("MUSIC", R.raw.earcon4).commit();	
         	}
         }
     }

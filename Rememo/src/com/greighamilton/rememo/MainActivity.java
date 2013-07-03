@@ -44,8 +44,6 @@ public class MainActivity extends Activity {
     private String selectedWeekStartDate;
     private String selectedWeekEndDate;
 
-    //private OnNavigationListener mOnNavigationListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +88,7 @@ public class MainActivity extends Activity {
         allEventsCursor.moveToFirst();
         
         
-        
+        // if there is nothing in the db, show a splash screen to welcome the user
         if (db.isDatabaseEmpty()) setContentView(R.layout.activity_main_welcome);
 		else {
 			
@@ -130,22 +128,26 @@ public class MainActivity extends Activity {
 		        eventsCursor.moveToFirst();
 		        
 		        
-		        
+		        // loop through all the events from the db (via cursor) until there are no more
 		        while (!eventsCursor.isAfterLast()) {
 		        	
+		        	// create a new line for the diary (has time, name)
 		        	LinearLayout diaryLine = new LinearLayout(this);
 		        	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
+		        	
+		        	// create a new text view for the time of event
 		        	TextView eventPaddingTime = new TextView(this);
 		        	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
 							.getString(DatabaseHelper.EVENT_DATE_TIME)
 							.substring(11, 16)) + " \t \t ");
 		        	
+		        	// create a new text view for the name of the event
 		        	TextView eventText = new TextView(this);
 		        	eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
 					
 					eventText.setPadding(35, 0, 0, 0);
 					
-					// check if event has been done
+					// check if event has been done, if it has strikethrough the text
 		        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
 		        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		        	}
@@ -171,6 +173,7 @@ public class MainActivity extends Activity {
 					eventsCursor.moveToNext();
 		        }
 		        
+		        // tag the widget for use later when edit / delete
 		        widget.setTag(R.id.diary_date, currentCursorDate);
 				
 				// add widget
@@ -181,6 +184,7 @@ public class MainActivity extends Activity {
 				
 			}
 
+			// build the main grid view, single column, for the diary
 			GridView grid = (GridView) findViewById(R.id.grid_of_widgets);
 			if (grid.getAdapter() == null) {
 				grid.setAdapter(new WidgetAdapter(widgets));
@@ -262,6 +266,11 @@ public class MainActivity extends Activity {
 
     }
     
+    /**
+     * Method that deals with onClick events for This Week.
+     * 
+     * @param v
+     */
     public void clickThisWeek (View v) {
     	String[] thisWeekDates = Util.getCurrentWeekDates().split("#");
     	selectedWeekStartDate = thisWeekDates[0];
@@ -272,6 +281,11 @@ public class MainActivity extends Activity {
         setUpWidgets();
     }
     
+    /**
+     * Method that deals with onClick events for Next Week.
+     * 
+     * @param v
+     */
     public void clickNextWeek (View v) {
     	String[] nextWeekDates = Util.getNextWeekDates(selectedWeekStartDate).split("#");
     	selectedWeekStartDate = nextWeekDates[0];
@@ -280,6 +294,11 @@ public class MainActivity extends Activity {
         setUpWidgets();
     }
     
+    /**
+     * Method that deals with onClick events for Last Week.
+     * 
+     * @param v
+     */
     public void clickLastWeek (View v) {
     	String[] lastWeekDates = Util.getLastWeekDates(selectedWeekStartDate).split("#");
         selectedWeekStartDate = lastWeekDates[0];
@@ -290,6 +309,10 @@ public class MainActivity extends Activity {
         setUpWidgets();
     }
     
+    /**
+     * 
+     * @param v
+     */
 	public void clickWidget(View v) {
 		
 		// get info from widget view
