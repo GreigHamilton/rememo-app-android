@@ -19,6 +19,12 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/music_zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Music" />
+        
+        <RadioButton
             android:id="@+id/music_one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,6 +54,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Music 5" />
+        
+        <RadioButton
+            android:id="@+id/alert_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alert 1" />
+        
+        <RadioButton
+            android:id="@+id/alert_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Alert 2" />
+        
+        <RadioButton
+            android:id="@+id/alert_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alert 3" />
+
+        <RadioButton
+            android:id="@+id/alert_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alert 4" />
+        
+        <RadioButton
+            android:id="@+id/alert_five"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alert 5" />
     </RadioGroup>
 
 </LinearLayout>

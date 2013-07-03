@@ -2,6 +2,8 @@ package com.greighamilton.rememo;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,6 +20,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -121,20 +124,52 @@ public class ReminderActivity extends Activity {
     	reminderText.setVisibility(View.GONE);
     	
     	// start music and vibration TODO
-    	int resource = sp.getInt("MUSIC", R.raw.friends); // set default
-    	mp = MediaPlayer.create(this, resource);
+    	int resource = sp.getInt("MUSIC", 0); // set default
+    	int resourceTime = sp.getInt("MUSIC_TIME", 0);
     	
-    	try {
-			mp.prepare();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-        mp.start();
+    	// check if music is to be played
+    	if (resource != 0) {
+    		mp = MediaPlayer.create(this, resource);
+        	
+        	try {
+    			mp.prepare();
+    		} catch (IllegalStateException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+        	
+            mp.start();
+            
+            TimerTask task = new TimerTask() {
+
+                @Override
+                public void run() 
+                {
+                    // stop the timer after a set period of time
+                    mp.stop();
+
+                }
+            };
+            
+            Timer t = new Timer();
+            
+            if (resource == R.raw.earcon1 || resource == R.raw.earcon2 || resource == R.raw.earcon3 || resource == R.raw.earcon4 || resource == R.raw.earcon5) {
+                t.schedule(task, 1000);
+            }
+            else {
+            	
+            	// set time (second parameter) for the reminder
+                t.schedule(task, resourceTime*1000);
+            }
+            
+            
+            
+            
+            
+    	}
     }
     
     public void clickReminderScreen(View v) {
@@ -145,8 +180,6 @@ public class ReminderActivity extends Activity {
     	laterButton.setVisibility(View.VISIBLE);
     	
     	reminderText.setVisibility(View.VISIBLE);
-    	
-    	mp.stop();
     }
     
     public void clickReminderDone(View v) {
