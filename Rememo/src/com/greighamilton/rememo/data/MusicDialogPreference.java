@@ -1,7 +1,5 @@
 package com.greighamilton.rememo.data;
 
-import java.io.IOException;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +8,6 @@ import android.media.MediaPlayer;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.RadioButton;
 
 import com.greighamilton.rememo.R;
@@ -76,28 +73,30 @@ public class MusicDialogPreference extends DialogPreference {
         		sp.edit().putInt("MUSIC", R.raw.jurassicpark).commit();	
         	}
         	
+        	
+        	
         	// earcons
-        	RadioButton alertOne = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_one);
+        	RadioButton alertOne = (RadioButton)((AlertDialog) dialog).findViewById(R.id.alert_one);
         	if (alertOne.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.earcon1).commit();
         	}
         	
-        	RadioButton alertTwo = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_two);
+        	RadioButton alertTwo = (RadioButton)((AlertDialog) dialog).findViewById(R.id.alert_two);
         	if (alertTwo.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.earcon2).commit();
         	}
         	
-        	RadioButton alertThree = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_three);
+        	RadioButton alertThree = (RadioButton)((AlertDialog) dialog).findViewById(R.id.alert_three);
         	if (alertThree.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.earcon2).commit();
         	}
         	
-        	RadioButton alertFour = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_four);
+        	RadioButton alertFour = (RadioButton)((AlertDialog) dialog).findViewById(R.id.alert_four);
         	if (alertFour.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.earcon3).commit();
         	}
         	
-        	RadioButton alertFive = (RadioButton)((AlertDialog) dialog).findViewById(R.id.music_five);
+        	RadioButton alertFive = (RadioButton)((AlertDialog) dialog).findViewById(R.id.alert_five);
         	if (alertFive.isChecked()) {
         		sp.edit().putInt("MUSIC", R.raw.earcon4).commit();	
         	}

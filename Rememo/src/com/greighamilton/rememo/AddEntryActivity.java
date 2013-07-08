@@ -28,6 +28,8 @@ import com.greighamilton.rememo.util.Util;
 
 /**
  * Created by Greig Hamilton on 10/06/13.
+ * 
+ * Class activity for adding new events to the diary.
  */
 public class AddEntryActivity extends Activity {
 
@@ -66,6 +68,7 @@ public class AddEntryActivity extends Activity {
         
         db = DatabaseHelper.getInstance(this);
 
+        // get the current date and time
         day = Util.getTodaysDay();
         month = Util.getTodaysMonth();
         year = Util.getTodaysYear();
@@ -73,9 +76,10 @@ public class AddEntryActivity extends Activity {
         minute = Util.getCurrentMinute();
         hour = Util.getCurrentHour();
         
-        // check if entras (i.e. it is an edit)
+        // check if extras (i.e. it is an edit)
         extras = getIntent().getExtras();
 
+        // if there are extras, then this is an update to a current event
         if (extras != null) {
         	
             currentId = extras.getInt("eventId");
@@ -124,15 +128,19 @@ public class AddEntryActivity extends Activity {
 
 		case R.id.addentry_menu_save:
 
+			// get all the date entered by the user
 			EditText nameBox = (EditText) findViewById(R.id.entry_name);
 			Button dateButton = (Button) findViewById(R.id.entry_date);
 			Button timeButton = (Button) findViewById(R.id.entry_time);
 
+			// set errors if required information hasn't been completed by the user
 			if (nameBox.getText().toString().length() <= 0 || dateButton.getText().equals("Date") || timeButton.getText().equals("Time")) {
 				if (nameBox.getText().toString().length() == 0) nameBox.setError("Name is required.");
 				if (dateButton.getText().equals("Date")) dateButton.setError("Date is required.");
 				if (timeButton.getText().equals("Time")) timeButton.setError("Time is required.");
 			}
+			
+			// if everything has been entered correctly, continue
 			else {
 
 				// Get name data
@@ -276,6 +284,17 @@ public class AddEntryActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Method to remove an existing reminder and set a new one (after an event update)
+	 * 
+	 * @param id				the event id
+	 * @param name				the event name
+	 * @param dateTimeText		the event date and time
+	 * @param circled			event circled (1 if true)
+	 * @param underlined		event underlined (1 if true)
+	 * @param starred			event starred (1 if true)
+	 * @param notes				the event notes
+	 */
 	private void removeReminder(int id, String name, String dateTimeText, int circled, int underlined, int starred, String notes) {
 		// remove the original reminder and notification
 		Intent i = new Intent(
@@ -314,22 +333,47 @@ public class AddEntryActivity extends Activity {
 		alarmManager.cancel(alarmIntent);
 	}
 
+	/**
+	 * Method called when the user clicks on the date button.
+	 * Calls a dialog fragment date picker
+	 * 
+	 * @param view		View
+	 */
 	public void selectDate(View view) {
         DialogFragment newFragment = new SelectDateFragment();
         newFragment.show(getFragmentManager(), "DatePicker");
     }
     
+	/**
+	 * Method called when the user clicks on the time button.
+	 * Calls a dialog fragment date picker
+	 * 
+	 * @param view		View
+	 */
     public void selectTime(View view) {
     	DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
+    /**
+     * Method that populates the date button text, after the user picks a date.
+     * 
+     * @param year		year selected by user
+     * @param month		month selected by user
+     * @param day		day selected by user
+     */
     public void populateSetDate(int year, int month, int day) {
         // Add selected date text to button
         Button button = (Button) findViewById(R.id.entry_date);
         button.setText(day + "-" + month + "-" + year);
     }
     
+    /**
+     * Method that populates the time button text, after the user picks a time.
+     * 
+     * @param hour		hour selected by user
+     * @param minute	minute selected by user
+     */
     public void populateSetTime(int hour, int minute) {
         // Add selected time text to button
         Button button = (Button) findViewById(R.id.entry_time);

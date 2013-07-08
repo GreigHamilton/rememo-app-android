@@ -50,13 +50,16 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
         
+        // get the current week start and end dates
         String[] thisWeekDates = Util.getCurrentWeekDates().split("#");
         currentWeekStartDate = thisWeekDates[0];
         currentWeekEndDate = thisWeekDates[1];
         
+        // set the selected week start and end dates as the current week start and end dates
         selectedWeekStartDate = currentWeekStartDate;
         selectedWeekEndDate = currentWeekEndDate;
         
+        // currently selected date is null
         selectedDate = null;
     }
 
@@ -67,6 +70,7 @@ public class MainActivity extends Activity {
         db = DatabaseHelper.getInstance(this);
         widgets = new ArrayList<LinearLayout>();
         
+        // get the current week start and end dates
         String[] thisWeekDates = Util.getCurrentWeekDates().split("#");
         currentWeekStartDate = thisWeekDates[0];
         currentWeekEndDate = thisWeekDates[1];
@@ -80,16 +84,19 @@ public class MainActivity extends Activity {
 	@SuppressWarnings("deprecation")
 	private void setUpWidgets() {
 
+    	// clear any widgets currently on display
         widgets.clear();
 
         setContentView(R.layout.activity_main);
         
+        // get all the event sin the database for the selected week
         Cursor allEventsCursor = db.getEventsByDate(selectedWeekStartDate, selectedWeekEndDate, true);
         allEventsCursor.moveToFirst();
         
         
         // if there is nothing in the db, show a splash screen to welcome the user
         if (db.isDatabaseEmpty()) setContentView(R.layout.activity_main_welcome);
+        
 		else {
 			
 			// start at first date
@@ -269,10 +276,14 @@ public class MainActivity extends Activity {
     /**
      * Method that deals with onClick events for This Week.
      * 
-     * @param v
+     * @param v		View
      */
     public void clickThisWeek (View v) {
+    	
+    	// get the current week start and end dates
     	String[] thisWeekDates = Util.getCurrentWeekDates().split("#");
+    	
+    	// set the selected week start and end dates as this weeks start and end dates
     	selectedWeekStartDate = thisWeekDates[0];
         selectedWeekEndDate = thisWeekDates[1];
         
@@ -284,10 +295,14 @@ public class MainActivity extends Activity {
     /**
      * Method that deals with onClick events for Next Week.
      * 
-     * @param v
+     * @param v		View
      */
     public void clickNextWeek (View v) {
+    	
+    	// get next weeks start and end dates
     	String[] nextWeekDates = Util.getNextWeekDates(selectedWeekStartDate).split("#");
+    	
+    	// set the selected week start and end dates as next weeks start and end dates
     	selectedWeekStartDate = nextWeekDates[0];
     	selectedWeekEndDate = Util.getTomorrowsDate(nextWeekDates[1]);
         
@@ -297,10 +312,14 @@ public class MainActivity extends Activity {
     /**
      * Method that deals with onClick events for Last Week.
      * 
-     * @param v
+     * @param v		View
      */
     public void clickLastWeek (View v) {
+    	
+    	// get last weeks start and end dates
     	String[] lastWeekDates = Util.getLastWeekDates(selectedWeekStartDate).split("#");
+    	
+    	// set the selected week start and end dates as last weeks start and end dates
         selectedWeekStartDate = lastWeekDates[0];
         selectedWeekEndDate = Util.getTomorrowsDate(lastWeekDates[1]);
         
@@ -310,16 +329,22 @@ public class MainActivity extends Activity {
     }
     
     /**
+     * Method that deals with onClick events when the user clicks on a widget.
      * 
-     * @param v
+     * Launches the daily activity.
+     * 
+     * @param v		View
      */
 	public void clickWidget(View v) {
 		
 		// get info from widget view
 		LinearLayout selectedWidget = (LinearLayout) v;
 		String date = (String) selectedWidget.getTag(R.id.diary_date);
+		
+		// set the selected date to the date of the widget selected
 		selectedDate = date;
 		
+		// launch the daily activity
 		Intent i = new Intent(MainActivity.this, DailyActivity.class);
 		i.putExtra("SelectedDate", selectedDate);
 		startActivity(i);
