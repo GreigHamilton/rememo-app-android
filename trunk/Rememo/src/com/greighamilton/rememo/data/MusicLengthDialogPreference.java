@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.SeekBar;
 
 import com.greighamilton.rememo.R;
@@ -36,6 +35,7 @@ public class MusicLengthDialogPreference extends DialogPreference {
     public void onClick (DialogInterface dialog, int which) {
         if (DialogInterface.BUTTON_POSITIVE == which) {
         	
+        	// buildthe seek bar for selecting the length of the earcon / musicon
         	SeekBar bar = (SeekBar)((AlertDialog) dialog).findViewById(R.id.music_length_seekbar);
         	bar.setMax(100);
         	

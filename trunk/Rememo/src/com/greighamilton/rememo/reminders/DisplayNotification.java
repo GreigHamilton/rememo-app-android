@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -14,6 +13,12 @@ import com.greighamilton.rememo.MainActivity;
 import com.greighamilton.rememo.R;
 import com.greighamilton.rememo.data.DatabaseHelper;
 
+/**
+ * Class activity for diplaying the notification
+ * 
+ * @author Greig
+ *
+ */
 public class DisplayNotification extends Activity {
 	
 	private DatabaseHelper db;

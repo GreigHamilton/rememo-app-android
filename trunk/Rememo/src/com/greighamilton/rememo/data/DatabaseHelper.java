@@ -216,57 +216,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @author Greig Hamilton
 	 */
 	
-	// INCOME queries
-//	public Cursor getIncome() {
-//		return db.query("INCOME", null, null, null, null, null, "_id asc");
-//	}
-	
-//	public Cursor getIncomeId(String id) {
-//		return db.query("INCOME", null, "_id="+id, null, null, null, null);
-//	}
-	
-//	public Cursor getSpecifiedIncome(String month, String year, int catId, boolean allIncomes, boolean allCategories) {
-//		
-//		if (allIncomes && allCategories)
-//			return db.query("INCOME", null, null, null, null, null, "date asc");
-//		else if (allIncomes && !allCategories)
-//			return db.query("INCOME", null, "category_id="+catId, null, null, null, "date asc");
-//		else if (!allIncomes && allCategories)
-//			return db.query("INCOME", null, "date LIKE ?", new String[] {year+"-"+month+"-%"}, null, null, "date asc");
-//		else
-//			return db.query("INCOME", null, "category_id="+catId+" AND date LIKE ?", new String[] {year+"-"+month+"-%"}, null, null, "date asc");
-//	}
-//	
-//	public int getTotalIncomeAmountForMonth(String year, String month) {
-//		Cursor c = db.rawQuery("SELECT SUM(amount) FROM INCOME WHERE date LIKE '"+year+"-"+month+"-%'", null);
-//		c.moveToFirst();
-//		if (!c.isAfterLast()) return c.getInt(0);
-//		else return 0;		
-//	}
-	
-//	public Cursor getIncomeByAmount(String month, String year, boolean allReq) {
-//		
-//		if (allReq)
-//			return db.query("INCOME", null, null, null, null, null, "amount desc");
-//		else
-//			return db.query("INCOME", null, "date LIKE ?", new String[] {year+"-"+month+"-%"}, null, null, "amount desc");
-//	}
-//	
-//	public Cursor getIncomeByDate(String fromDate, String toDate, boolean ascendingOrder) {
-//		String clause = null;
-//		String order = (ascendingOrder) ? "date asc" : "date desc";
-//		
-//		if (fromDate != null && toDate != null) {
-//			clause = " date >= '" + fromDate + "'" +
-//			     " AND date <= '" + toDate + "'";
-//		}
-//		else if (fromDate != null) clause = "date >= '" + fromDate + "'";
-//		else if (toDate != null) clause = "date <= '" + toDate + "'";
-//		
-//		
-//		return db.query("INCOME", null, clause, null, null, null, order);
-//	}
-//
+	/**
+	 * Method to add an event to the database.
+	 * 
+	 * @param nextId		next available id for the event in db
+	 * @param name			the name of the event
+	 * @param date_time		the date and time of the event
+	 * @param circled		if the event is circled (1 if true)
+	 * @param underlined	if the event is underlined (1 if true)
+	 * @param starred		if the event is starred (1 if true)
+	 * @param notes			the notes for the event
+	 * 
+	 * @return				insertion into the db
+	 */
 	public int addEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes) {
 		ContentValues cv = new ContentValues(7);
 		cv.put("_id", nextId);
@@ -279,72 +241,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		return (int) db.insert("EVENT", null, cv);
 	}
-//	
-//	public void updateIncome(String id, String name, float amount, String date, int repetition_period, int repetition_length, String notes, int categoryId, int notification_id) {
-//		ContentValues cv = new ContentValues(9);
-//		
-//		cv.put("name", name);
-//		cv.put("amount", amount);
-//		cv.put("date", date);
-//		cv.put("repetition_period", repetition_period);
-//		cv.put("repetition_length", repetition_length);
-//		cv.put("notes", notes);
-//		cv.put("category_id", categoryId);
-//		cv.put("notification_id", notification_id);
-//
-//		db.update("INCOME", cv, "_id="+id, null);
-//	}
-//	
-//	public void deleteIncome(String id) {
-//		db.delete("INCOME", "_id="+id, null);
-//	}
-//	
-//	public void deleteIncomeSeries(String id) {
-//		db.delete("INCOME", "_id="+id+" OR (repetition_period = 4 AND repetition_length = "+id+")", null);
-//	}
-//	
-//	public String getIncomeSeriesID(String id) {
-//		Cursor c = db.rawQuery("SELECT * FROM INCOME WHERE _id = "+id, null);
-//		c.moveToFirst();
-//		if (!c.isAfterLast()) {
-//			return (c.getInt(INCOME_REPETITION_PERIOD)==4) ? ""+c.getInt(INCOME_REPETITION_LENGTH) : id;
-//		}
-//		return id;
-//	}
-//
-//	public String getIncomeName(int index) {
-//		Cursor c = db.rawQuery("SELECT * FROM INCOME WHERE _id = "+index, null);
-//		String name = "nothing :(";
-//		c.moveToFirst();
-//		return (!c.isAfterLast()) ? c.getString(INCOME_NAME) : name;
-//	}
-//	
-//	public int getIncomeRepetitionPeriod(String index) {
-//		Cursor c = db.rawQuery("SELECT * FROM INCOME WHERE _id = "+index, null);
-//		c.moveToFirst();
-//		return (!c.isAfterLast()) ? c.getInt(INCOME_REPETITION_PERIOD) : 0;
-//	}
-//	
-//	public int getIncomeRepetitionLength(String index) {
-//		Cursor c = db.rawQuery("SELECT * FROM INCOME WHERE _id = "+index, null);
-//		c.moveToFirst();
-//		return (!c.isAfterLast()) ? c.getInt(INCOME_REPETITION_LENGTH) : 0;
-//	}
 	
+	/**
+	 * Method to find the next available event id in the database.
+	 * 
+	 * @return		the id
+	 */
 	public int nextEventID() {
 		Cursor c = db.query("EVENT", null, null, null, null, null, "_id desc");
 		c.moveToFirst();
+		
 		return ((!c.isAfterLast()) ? c.getInt(EVENT_ID)+1 : 1);
 		}
 	
+	/**
+	 * Method to get the name of an event, using the id
+	 * 
+	 * @param index		of the event to be found
+	 * 
+	 * @return			the name of the event
+	 */
 	public String getEventName(int index) {
 		Cursor c = db.rawQuery("SELECT * FROM EVENT WHERE _id = " + index,
 				null);
 		String name = " ";
 		c.moveToFirst();
+		
 		return (!c.isAfterLast()) ? c.getString(EVENT_NAME) : name;
 	}
 	
+	/**
+	 * Method to return a cursor of events in the date range specified.
+	 * 
+	 * @param fromDate			the earliest date range requested
+	 * @param toDate			the latest date range requested
+	 * @param ascendingOrder	if the results are to be in ascending order (1 if true)
+	 * 
+	 * @return					a cursor to the results of the query
+	 */
 	public Cursor getEventsByDate(String fromDate, String toDate, boolean ascendingOrder) {
 		String clause = null;
 		String order = (ascendingOrder) ? "date_time asc" : "date_time desc";
@@ -353,13 +287,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			clause = " date_time >= '" + fromDate + "'" +
 			     " AND date_time <= '" + toDate + "'";
 		}
+		
 		else if (fromDate != null) clause = "date_time >= '" + fromDate + "'";
+		
 		else if (toDate != null) clause = "date_time <= '" + toDate + "'";
 		
 		
 		return db.query("EVENT", null, clause, null, null, null, order);
 	}
 	
+	/**
+	 * Method to find if the database has any events currently in its table.
+	 * 
+	 * @return		true or false
+	 */
 	public boolean isDatabaseEmpty() {
 		Cursor cur = db.rawQuery("SELECT COUNT(*) FROM EVENT", null);
 	    if (cur != null){
@@ -372,8 +313,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    return false;
 	}
 	
-	
-	
+	/**
+	 * Method to add an id to a table of events that have been completed.
+	 * 
+	 * @param nextId		the id of the event that is complete
+	 * 
+	 * @return				insertion int o the database
+	 */
 	public int addToCompleteEvents(int nextId) {
 		ContentValues cv = new ContentValues(1);
 		cv.put("_id", nextId);
@@ -381,6 +327,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return (int) db.insert("COMPLETE_EVENT", null, cv);
 	}
 	
+	/**
+	 * Method used to find if an event has been completed yet.
+	 * 
+	 * @param id		the id to be checked
+	 * 
+	 * @return			true or false
+	 */
 	public boolean isEventComplete(int id) {
 		
 		Cursor c = db.rawQuery("SELECT * FROM COMPLETE_EVENT WHERE _id=" + id, null);
@@ -395,6 +348,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	/**
+	 * Method to get events on a specific date.
+	 * 
+	 * @param date				the date of the query
+	 * @param ascendingOrder	if the results are to be in ascending order (1 if true)
+	 * 
+	 * @return					a cursor pointing to before the first result of the query
+	 */
 	public Cursor getEventsByDate(String date, boolean ascendingOrder) {
 		Log.i("DATE DB", date);
 		String clause = null;
@@ -408,6 +369,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return db.query("EVENT", null, clause, null, null, null, order);
 	}
 
+	/**
+	 * Method to update an event that is currently in the database.
+	 * 
+	 * @param nextId		the id of the event being updated
+	 * @param name			the name of the event
+	 * @param date_time		the date and time of the event
+	 * @param circled		if the event is circled (1 if true)
+	 * @param underlined	if the event is underlined (1 if true)
+	 * @param starred		if the event is starred (1 if true)
+	 * @param notes			the notes of the event
+	 */
 	public void updateEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes) {
 		
 		ContentValues cv = new ContentValues(7);
@@ -422,12 +394,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.update("EVENT", cv, "_id="+nextId, null);
 	}
 	
+	/**
+	 * Method used to delete a particular event from the b using an id
+	 * 
+	 * @param id		of the event to be deleted
+	 */
 	public void deleteEvent(int id) {
 		db.delete("EVENT", "_id="+id, null);
 	}
 	
 	
-	
+	// --------------------------------------------------------------------------------------------------------
 	
 	
 

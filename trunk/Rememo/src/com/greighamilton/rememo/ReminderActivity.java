@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -31,7 +30,9 @@ import com.greighamilton.rememo.data.DatabaseHelper;
 import com.greighamilton.rememo.util.Util;
 
 /**
- * Created by Greig on 10/06/13.
+ * Created by Greig Hamilton on 10/06/13.
+ * 
+ * Class activity for reminders.
  */
 public class ReminderActivity extends Activity {
 	
@@ -87,7 +88,7 @@ public class ReminderActivity extends Activity {
         	reminderBackground.setBackgroundColor(Color.GRAY);
         }
         
-        
+        // get all the extras associated with the reminder
         eventDate = getIntent().getExtras().getString("EventDate");
         eventId = getIntent().getExtras().getInt("EventId");
         eventName = getIntent().getExtras().getString("EventName");
@@ -96,8 +97,7 @@ public class ReminderActivity extends Activity {
 		starred = getIntent().getExtras().getInt("EventStarred");
 		eventNotes = getIntent().getExtras().getString("EventNotes");
         
-        //Log.i("FULL", fullDateTime);
-        
+		// get the date and time information
         year = Integer.parseInt(eventDate.substring(0, 4));
         month = Integer.parseInt(eventDate.substring(5, 7));
         day = Integer.parseInt(eventDate.substring(8, 10));
@@ -125,7 +125,7 @@ public class ReminderActivity extends Activity {
     	
     	// start music and vibration TODO
     	int resource = sp.getInt("MUSIC", 0); // set default
-    	int resourceTime = sp.getInt("MUSIC_TIME", 0);
+    	int resourceTime = sp.getInt("MUSIC_TIME", 10);
     	
     	// check if music is to be played
     	if (resource != 0) {
@@ -141,8 +141,10 @@ public class ReminderActivity extends Activity {
     			e.printStackTrace();
     		}
         	
+        	// start the audio stream
             mp.start();
             
+            // timer task to enable customisable timing of audio
             TimerTask task = new TimerTask() {
 
                 @Override
@@ -156,6 +158,7 @@ public class ReminderActivity extends Activity {
             
             Timer t = new Timer();
             
+            // check if the audio is an earcon, if so then set schedule time to 1 sec default.
             if (resource == R.raw.earcon1 || resource == R.raw.earcon2 || resource == R.raw.earcon3 || resource == R.raw.earcon4 || resource == R.raw.earcon5) {
                 t.schedule(task, 1000);
             }
@@ -172,6 +175,12 @@ public class ReminderActivity extends Activity {
     	}
     }
     
+    /**
+     * Method called when user clicks the reminder screen.
+     * Sets the text and buttons to visible.
+     * 
+     * @param v		View
+     */
     public void clickReminderScreen(View v) {
     	changeButton.setVisibility(View.VISIBLE);
      	
@@ -182,6 +191,12 @@ public class ReminderActivity extends Activity {
     	reminderText.setVisibility(View.VISIBLE);
     }
     
+    /**
+     * Method called when the user clicks on the done button.
+     * Finds the original alarm and notification created, and removes it.
+     * 
+     * @param v		View
+     */
     public void clickReminderDone(View v) {
     	
     	alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -236,6 +251,13 @@ public class ReminderActivity extends Activity {
     	startActivity(intent);
     }
     
+    /**
+     * Method called when user clicks on later button
+     * Finds the original alarm and notification and resets it to the new time
+     * selected by the user.
+     * 
+     * @param v		View
+     */
     public void clickReminderLater(View v) {
     	
     	alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

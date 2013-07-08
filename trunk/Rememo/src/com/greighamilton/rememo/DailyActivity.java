@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,6 +27,12 @@ import com.greighamilton.rememo.data.DatabaseHelper;
 import com.greighamilton.rememo.data.SettingsActivity;
 import com.greighamilton.rememo.util.Util;
 
+/**
+ * Class activity for daily diary view.
+ * 
+ * @author Greig Hamilton
+ *
+ */
 public class DailyActivity extends Activity {
 
 	private List<LinearLayout> widgets;
@@ -72,12 +77,18 @@ public class DailyActivity extends Activity {
         setUpWidgets();
     }
 
+	/**
+	 * Method that refreshes the widgets on the grid view.
+	 * 
+	 * Called every time a change occurs on the view.
+	 */
     @SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	private void setUpWidgets() {
     	
     	setTitle(Util.getDayOfWeek(selectedDate) + ": " + selectedDate.substring(8, 10) + " " + Util.getMonthText(selectedDate) + " " + selectedDate.substring(0, 4));
 
+    	// clear any current widgets
         widgets.clear();
 
 		setContentView(R.layout.activity_daily);
@@ -113,33 +124,40 @@ public class DailyActivity extends Activity {
         TextView incompleteNoEvents = (TextView) widget.findViewById(R.id.noevents_text_incomplete);
         incompleteNoEvents.setVisibility(View.GONE);
         
+        // if nothing to show, show default text
         if (eventsCursor.isAfterLast())
         	incompleteNoEvents.setVisibility(View.VISIBLE);
         
+        // whilst there is something available for the day to show
         while (!eventsCursor.isAfterLast()) {
         	
         	incompleteNoEvents.setVisibility(View.GONE);
         	
-        	
         	if (!db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
+        		
+        		// create new layouts for each diary line
         		LinearLayout diaryLine = new LinearLayout(this);
     	    	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
     	    	
-    	    	
+    	    	// create new layouts for each notes line
     	    	LinearLayout notesLine = new LinearLayout(this);
     	    	notesLine.setOrientation(LinearLayout.HORIZONTAL);
     	    	
+    	    	// add some padding to be used to space out the data
     	    	TextView eventPaddingTime = new TextView(this);
     	    	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
     					.getString(DatabaseHelper.EVENT_DATE_TIME)
     					.substring(11, 16)) + " \t \t ");
     	    	
+    	    	// set the event text to that from the current database item
     	    	TextView eventText = new TextView(this);
     			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
     			
+    			// set some padding for the notes line
     			TextView eventPaddingNotes = new TextView(this);
     			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
     	    	
+    			// set the event notes text to that from the current database item
     	    	TextView notesText = new TextView(this);
     	    	notesText.setText("Notes: " + eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
     			
@@ -166,11 +184,13 @@ public class DailyActivity extends Activity {
     	    	diaryLine.setTag(R.id.diary_daily_starred, eventsCursor.getInt(DatabaseHelper.EVENT_STARRED));
     	    	diaryLine.setTag(R.id.diary_daily_notes, eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
     	    	
+    	    	// set an onclick listener for each of the diary lines
     	    	diaryLine.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
                     	
+                    	// all the data that is associated with each line (or entry)
                     	final int eventId = (Integer) v.getTag(R.id.diary_daily_id);
                     	final String eventName = (String) v.getTag(R.id.diary_daily_name);
                     	final String eventDateTime = (String) v.getTag(R.id.diary_daily_datetime);
@@ -246,7 +266,8 @@ public class DailyActivity extends Activity {
     			if (!eventsCursor.getString(DatabaseHelper.EVENT_NOTES).equals("")) eventsHolder.addView(notesLine);
     			else eventsHolder.addView(paddingNotes);
         	}
-        		
+        	
+        	// get the next event
 			eventsCursor.moveToNext();
 			
 			if (eventsHolder.getChildCount() == 0)
@@ -348,6 +369,7 @@ public class DailyActivity extends Activity {
 		// add widget
 		widgets.add(widget);
 		
+		// generate the grid layout
 		GridView grid = (GridView) findViewById(R.id.grid_of_widgets_daily);
 		if (grid.getAdapter() == null) {
 			grid.setAdapter(new WidgetAdapter(widgets));
@@ -434,8 +456,14 @@ public class DailyActivity extends Activity {
 
     }
     
+    /**
+     * Method called when user clicks on the today button.
+     * 
+     * @param v		View
+     */
     public void clickToday (View v) {
     	
+    	// updates the selected date to today
     	selectedDate = Util.getTodaysDate();
         
         widgets.clear();
@@ -443,15 +471,29 @@ public class DailyActivity extends Activity {
         setUpWidgets();
     }
     
+    /**
+     * Method called when user clicks on the tomorrow button.
+     * 
+     * @param v		View
+     */
     public void clickTomorrow (View v) {
 
+    	// updates the selected date to the next day
     	selectedDate = Util.getTomorrowsDate(selectedDate);
+    	
         setUpWidgets();
     }
     
+    /**
+     * Method called when user clicks on the yesterday button.
+     * 
+     * @param v		View
+     */
     public void clickYesterday (View v) {
     	
+    	// updates the selected date to the previous date
     	selectedDate = Util.getYesterdaysDate(selectedDate);
+    	
         widgets.clear();
         
         setUpWidgets();

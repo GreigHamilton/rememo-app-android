@@ -35,6 +35,7 @@ public class ColourDialogPreference extends DialogPreference {
     public void onClick (DialogInterface dialog, int which) {
         if (DialogInterface.BUTTON_POSITIVE == which) {
         	
+        	// find which colour was selected and add to shared preferences
         	RadioButton red = (RadioButton)((AlertDialog) dialog).findViewById(R.id.colour_red);
         	if (red.isChecked()) sp.edit().putString("COLOUR", "#F21818").commit();
         	
