@@ -1,3 +1,5 @@
+<!-- @author	Greig Hamilton -->
+<!-- layout for main activity -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dashboard"
     android:layout_width="fill_parent"
@@ -5,6 +7,7 @@
     android:gravity="center"
     android:orientation="vertical" >
 
+    <!-- grid view for grid of widgets -->
     <GridView
         android:id="@+id/grid_of_widgets"
         android:layout_width="wrap_content"
@@ -25,11 +28,12 @@
         android:background="#fff3f3f3"
         android:orientation="vertical" >
 
+        <!-- this week button -->
         <Button
             android:id="@+id/main_thisweek"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="This Week"
+            android:text="@string/main_button_this_week"
             android:onClick="clickThisWeek" />
 
         <LinearLayout
@@ -38,20 +42,22 @@
             android:background="#fff3f3f3"
             android:orientation="horizontal" >
 
+            <!-- previous week button -->
             <Button
                 android:id="@+id/main_lastweek"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Prev. Week"
+                android:text="@string/main_button_last_week"
                 android:onClick="clickLastWeek" />
             
+            <!-- next week button -->
             <Button
                 android:id="@+id/main_nextweek"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Next Week"
+                android:text="@string/main_button_next_week"
                 android:onClick="clickNextWeek" />
         </LinearLayout>
     </LinearLayout>

@@ -1,3 +1,5 @@
+<!-- @author	Greig Hamilton -->
+<!-- Layout for music length dialog -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -5,31 +7,34 @@
     android:layout_alignParentTop="true"
     android:layout_gravity="center" >
 
-<TextView
-    android:id="@+id/minValue"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBottom="@+id/seekBar"
-    android:layout_alignParentLeft="true"
-    android:layout_alignTop="@id/seekBar"
-    android:gravity="center"
-    android:text="   1" />
+    <!-- text view for seekbar min value -->
+    <TextView
+        android:id="@+id/minValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/music_length_seekbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@id/music_length_seekbar"
+        android:gravity="center"
+        android:text="@string/set_music_length_dialog_min" />
 
-<TextView
-    android:id="@+id/maxValue"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBottom="@id/seekBar"
-    android:layout_alignParentRight="true"
-    android:layout_alignTop="@id/seekBar"
-    android:gravity="center"
-    android:text="10   " />
+    <!-- text view for seekbar max value -->
+    <TextView
+        android:id="@+id/maxValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/music_length_seekbar"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/music_length_seekbar"
+        android:gravity="center"
+        android:text="@string/set_music_length_dialog_max" />
 
-<SeekBar
-    android:id="@+id/music_length_seekbar"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_toLeftOf="@id/maxValue"
-    android:layout_toRightOf="@id/minValue" />
+    <!-- seekbar for selecting length of musicon -->
+    <SeekBar
+        android:id="@+id/music_length_seekbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/maxValue"
+        android:layout_toRightOf="@id/minValue" />
 
 </RelativeLayout>

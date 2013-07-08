@@ -1,3 +1,5 @@
+<!-- @author	Greig Hamilton -->
+<!-- Layout for the diary widget (main) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -7,22 +9,25 @@
               android:id="@+id/diary_border"
               android:onClick="clickWidget" >
 
+    <!-- Day of the week text -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:text=""
             android:id="@+id/day_text"
             android:layout_gravity="left|center_vertical"/>
 
+    <!-- Date text -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            android:text=""
             android:id="@+id/main_date_text"
             android:layout_gravity="left|center_vertical"/>
 
+    <!-- Container for appointments added dynamically -->
     <LinearLayout
         android:id="@+id/diary_appointments_container"
         android:layout_width="match_parent"
