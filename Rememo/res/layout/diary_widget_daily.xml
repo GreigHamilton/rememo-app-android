@@ -1,3 +1,5 @@
+<!-- @author	Greig Hamilton -->
+<!-- Layout for the diary widget (daily) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -6,14 +8,16 @@
               android:padding="10dp"
               android:id="@+id/diary_border" >
 
+    <!-- Day text -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:text=""
             android:id="@+id/day_text_daily"
             android:layout_gravity="left|center_vertical"/>
 
+    <!-- appointments container -->
     <LinearLayout
         android:id="@+id/diary_appointments_container_daily"
         android:layout_width="match_parent"
@@ -21,21 +25,24 @@
         android:orientation="vertical" >
     </LinearLayout>
     
+    <!-- Default text when there are no events to show -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="\t \t \t \t \t \t \t No events to show. \n"
+            android:text="@string/default_text_diary_widget"
             android:id="@+id/noevents_text_incomplete"
             android:layout_gravity="left|center_vertical"/>
     
+    <!-- Text for completed events text -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:text=""
             android:id="@+id/day_text_daily_complete"
             android:layout_gravity="left|center_vertical"/>
     
+    <!-- complete appointments container -->
     <LinearLayout
         android:id="@+id/diary_appointments_container_daily_complete"
         android:layout_width="match_parent"
@@ -43,12 +50,15 @@
         android:orientation="vertical" >
     </LinearLayout>
     
+    <!-- Default text when there are no events to show in complete container -->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="\t \t \t \t \t \t \t No events to show. \n"
+            android:text="@string/default_text_diary_widget_complete"
             android:id="@+id/noevents_text_complete"
             android:layout_gravity="left|center_vertical"/>
+    
+    
     
     <!-- NOT PART OF THIS VIEW - JUST HERE FOR THE R.ID TAGS -->
     
