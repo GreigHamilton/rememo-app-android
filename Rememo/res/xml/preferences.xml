@@ -17,23 +17,23 @@
     
     <PreferenceCategory
         android:key="pref_set_music"
-        android:title="Reminder Music" >
+        android:title="Reminder Sound" >
 
         <com.greighamilton.rememo.data.MusicDialogPreference
-            android:dialogMessage="Choose music for reminders."
+            android:dialogMessage="Choose alert sound for reminders."
             android:key="pref_set_music"
             android:negativeButtonText="Cancel"
-            android:positiveButtonText="Save Music"
-            android:summary="Choose music for reminders."
-            android:title="Set Music" >
+            android:positiveButtonText="Save Sound"
+            android:summary="Choose alert sound for reminders."
+            android:title="Set Sound" >
         </com.greighamilton.rememo.data.MusicDialogPreference>
         
         <com.greighamilton.rememo.data.MusicLengthDialogPreference
-            android:dialogMessage="Choose music length for reminders."
+            android:dialogMessage="Choose alert sound length for reminders."
             android:key="pref_set_music_length"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Length"
-            android:summary="Choose music length for reminders in seconds (1 -> 10 Seconds)."
+            android:summary="Choose alert sound length for reminders in seconds (1 -> 10 Seconds)."
             android:title="Set Length" >
         </com.greighamilton.rememo.data.MusicLengthDialogPreference>
     </PreferenceCategory>

@@ -68,6 +68,7 @@ public class MainActivity extends Activity {
         super.onResume();
 
         db = DatabaseHelper.getInstance(this);
+        
         widgets = new ArrayList<LinearLayout>();
         
         // get the current week start and end dates
