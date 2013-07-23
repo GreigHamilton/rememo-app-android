@@ -161,9 +161,18 @@ public class MainActivity extends Activity {
 		        	}
 		        	
 		        	// check for customisation options (underline, circle, star)
-		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-		        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+		        	// check if device is 4.0- or 4.0+
+		        	int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		        	if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH && currentapiVersion != android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+		        		
+		        		if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+				        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+				        	}
+		        		
+		        	} else{
+		        	    // don't do anything
 		        	}
+		        	
 		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
 		        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 		        	}

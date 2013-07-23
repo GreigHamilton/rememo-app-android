@@ -53,6 +53,17 @@ public class AddEntryActivity extends Activity {
         db = DatabaseHelper.getInstance(this);
 
         setContentView(R.layout.activity_addentry);
+        
+		// check if device is 4.0- or 4.0+
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH && currentapiVersion != android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+        	
+			// don't do anything
+		} else {
+			// hide the circled button (doesn't work unless 4.0+
+			CheckBox editEventCircled = (CheckBox) findViewById(R.id.entry_circled);
+			editEventCircled.setVisibility(View.GONE);
+		}
     }
 
     @Override

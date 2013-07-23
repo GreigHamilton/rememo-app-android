@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +63,8 @@ public class DailyActivity extends Activity {
 		}
 		
 		setContentView(R.layout.activity_daily);
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	
@@ -165,9 +168,15 @@ public class DailyActivity extends Activity {
     			
     	    	
     	    	// check for customisation options (underline, circle, star)
-    	    	if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-    	    		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
-    	    	}
+    			// check if device is 4.0- or 4.0+
+	        	int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+	        	if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH){
+	        		if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+		        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+		        	}
+	        	} else{
+	        	    // don't do anything
+	        	}
     	    	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
     	    		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     	    	}
@@ -334,9 +343,17 @@ public class DailyActivity extends Activity {
     			
     	    	
     	    	// check for customisation options (underline, circle, star)
-    	    	if (eventsCursorComplete.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-    	    		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
-    	    	}
+	        	// check if device is 4.0- or 4.0+
+	        	int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+	        	if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH && currentapiVersion != android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+	        		
+	        		if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+			        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+			        	}
+	        		
+	        	} else{
+	        	    // don't do anything
+	        	}
     	    	if (eventsCursorComplete.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
     	    		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     	    	}
@@ -394,7 +411,11 @@ public class DailyActivity extends Activity {
 
         switch (item.getItemId()) {
 
-            case R.id.action_addentry:
+        	case android.R.id.home:
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        
+    		case R.id.action_addentry:
                 i = new Intent(DailyActivity.this,
                         AddEntryActivity.class);
                 DailyActivity.this.startActivity(i);
@@ -406,11 +427,6 @@ public class DailyActivity extends Activity {
                 DailyActivity.this.startActivity(i);
                 break;
                 
-            case R.id.action_reminder:
-                i = new Intent(DailyActivity.this,
-                        ReminderActivity.class);
-                DailyActivity.this.startActivity(i);
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
