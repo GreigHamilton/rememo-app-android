@@ -6,8 +6,8 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
@@ -206,59 +207,15 @@ public class DailyActivity extends Activity {
                     	final int eventCircled = (Integer) v.getTag(R.id.diary_daily_circled);
                     	final int eventUnderlined = (Integer) v.getTag(R.id.diary_daily_underlined);
                     	final int eventStarred = (Integer) v.getTag(R.id.diary_daily_starred);
-                    	final String eventNotes = (String) v.getTag(R.id.diary_daily_notes);
-                    	
-                    	// show dialog box for edit / delete options
-                    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                				v.getContext());
-                 
-                			// set title
-                			alertDialogBuilder.setTitle(eventName);
-                 
-                			// set dialog message
-                			alertDialogBuilder
-                				.setMessage("Would you like to edit or delete your reminder for " + eventName+"?")
-                				.setCancelable(false)
-                				.setPositiveButton("Delete",new DialogInterface.OnClickListener() {
-                					public void onClick(DialogInterface dialog,int id) {
-                						
-                						// TODO delete the notification and reminder!!
-                						
-                						
-                						// delete event from db and close
-                						db.deleteEvent(eventId);
-                						setUpWidgets();
-                					}
-                				  })
-                				.setNegativeButton("Edit",new DialogInterface.OnClickListener() {
-                					public void onClick(DialogInterface dialog,int id) {
-                						// if this button is clicked, just close
-                						// the dialog box and do nothing
-                						dialog.cancel();
-                						
-                						// launch add activity with details pre-filled and update database event
-                						
-                						Intent i = new Intent(DailyActivity.this, AddEntryActivity.class);
-                						i.putExtra("eventId", eventId);
-                						i.putExtra("eventName", eventName);
-                						i.putExtra("eventDateTime", eventDateTime);
-                						i.putExtra("eventCircled", eventCircled);
-                						i.putExtra("eventUnderlined", eventUnderlined);
-                						i.putExtra("eventStarred", eventStarred);
-                						i.putExtra("eventNotes", eventNotes);
-                						startActivity(i);
-                						DailyActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                					}
-                				});
-                 
-                				// create alert dialog
-                				AlertDialog alertDialog = alertDialogBuilder.create();
-                 
-                				// show it
-                				alertDialog.show();
-                    	
-                     }
-                    });
+						final String eventNotes = (String) v.getTag(R.id.diary_daily_notes);
+
+						Intent i = new Intent(DailyActivity.this, EventActivity.class);
+						i.putExtra("eventId", eventId);
+						startActivity(i);
+						
+						DailyActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					}
+				});
     			
     			// add to linear layout holder
     			diaryLine.addView(eventPaddingTime);
@@ -347,9 +304,12 @@ public class DailyActivity extends Activity {
 	        	int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 	        	if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH && currentapiVersion != android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
 	        		
-	        		if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-			        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
-			        	}
+	        		try {
+	        			if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1)
+	        				eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+	        		} catch (Exception e) {
+	        			e.printStackTrace();
+	        		}
 	        		
 	        	} else{
 	        	    // don't do anything
@@ -360,6 +320,39 @@ public class DailyActivity extends Activity {
     	    	if (eventsCursorComplete.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
     	    		eventText.setText(eventsCursorComplete.getString(DatabaseHelper.EVENT_NAME) + " *");
     	    	}
+    	    	
+    	    	// set on click listener for diary line
+    	    	diaryLine.setTag(R.id.diary_daily_id, eventsCursorComplete.getInt(DatabaseHelper.EVENT_ID));
+    	    	diaryLine.setTag(R.id.diary_daily_name, eventsCursorComplete.getString(DatabaseHelper.EVENT_NAME));
+    	    	diaryLine.setTag(R.id.diary_daily_datetime, eventsCursorComplete.getString(DatabaseHelper.EVENT_DATE_TIME));
+    	    	diaryLine.setTag(R.id.diary_daily_circled, eventsCursorComplete.getInt(DatabaseHelper.EVENT_CIRCLED));
+    	    	diaryLine.setTag(R.id.diary_daily_underlined, eventsCursorComplete.getInt(DatabaseHelper.EVENT_UNDERLINE));
+    	    	diaryLine.setTag(R.id.diary_daily_starred, eventsCursorComplete.getInt(DatabaseHelper.EVENT_STARRED));
+    	    	diaryLine.setTag(R.id.diary_daily_notes, eventsCursorComplete.getString(DatabaseHelper.EVENT_NOTES));
+    	    	
+    	    	// set an onclick listener for each of the diary lines
+    	    	diaryLine.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                    	
+                    	// all the data that is associated with each line (or entry)
+                    	final int eventId = (Integer) v.getTag(R.id.diary_daily_id);
+                    	final String eventName = (String) v.getTag(R.id.diary_daily_name);
+                    	final String eventDateTime = (String) v.getTag(R.id.diary_daily_datetime);
+                    	final int eventCircled = (Integer) v.getTag(R.id.diary_daily_circled);
+                    	final int eventUnderlined = (Integer) v.getTag(R.id.diary_daily_underlined);
+                    	final int eventStarred = (Integer) v.getTag(R.id.diary_daily_starred);
+						final String eventNotes = (String) v.getTag(R.id.diary_daily_notes);
+
+						Intent i = new Intent(DailyActivity.this, EventActivity.class);
+						i.putExtra("eventId", eventId);
+						i.putExtra("eventComplete", 1);
+						startActivity(i);
+						
+						DailyActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					}
+				});
     			
     			// add to linear layout holder
     			diaryLine.addView(eventPaddingTime);
@@ -402,6 +395,15 @@ public class DailyActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_daily, menu);
+		
+		// Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+               (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        
 		return true;
 	}
 
@@ -412,7 +414,7 @@ public class DailyActivity extends Activity {
         switch (item.getItemId()) {
 
         	case android.R.id.home:
-            NavUtils.navigateUpFromSameTask(this);
+        		finish();
             return true;
         
     		case R.id.action_addentry:
