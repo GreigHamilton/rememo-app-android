@@ -7,8 +7,9 @@
     <uses-sdk
         android:minSdkVersion="13"
         android:targetSdkVersion="16" />
-    
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+
+    <uses-permission android:name="android.permission.VIBRATE" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
@@ -23,14 +24,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
         </activity>
         <activity android:name="com.greighamilton.rememo.AddEntryActivity" />
-        
-
-        
-        
         <activity
-            android:name="com.greighamilton.rememo.ReminderActivity"
+            android:name="com.greighamilton.rememo.reminders.ReminderActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
@@ -39,30 +40,50 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        
-        
         <activity android:name="com.greighamilton.rememo.reminders.DisplayNotification" >
             <intent-filter>
                 <action android:name="com.greighamilton.rememo.reminders.DisplayNotification" />
-                <category android:name="android.intent.category.DEFAULT" /> 
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        
-        
-        
         <activity
             android:name="com.greighamilton.rememo.data.SettingsActivity"
             android:label="Settings" />
-        
-        <activity android:name=".DailyActivity"
+        <activity
+            android:name="com.greighamilton.rememo.DailyActivity"
             android:label="@string/title_activity_daily"
-            android:parentActivityName="com.greighamilton.rememo.MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            android:parentActivityName="com.greighamilton.rememo.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.greighamilton.rememo.MainActivity" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
         </activity>
-        
+        <activity
+            android:name="com.greighamilton.rememo.SearchResultsActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop" >
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.greighamilton.rememo.MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.greighamilton.rememo.EventActivity"
+            android:label="@string/title_activity_event" >
+            
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.greighamilton.rememo.DailyActivity" />
+        </activity>
     </application>
 
 </manifest>

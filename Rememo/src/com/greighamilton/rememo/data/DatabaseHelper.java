@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.annotation.SuppressLint;
@@ -296,6 +297,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return db.query("EVENT", null, clause, null, null, null, order);
 	}
 	
+	public Cursor getEvent(int id) {
+		
+		return db.rawQuery("SELECT * FROM EVENT WHERE _id=" + id, null);
+	}
+	
 	/**
 	 * Method to find if the database has any events currently in its table.
 	 * 
@@ -368,6 +374,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		return db.query("EVENT", null, clause, null, null, null, order);
 	}
+	
+	public ArrayList<String[]> searchQuery(String searchString) {
+		
+		String[] results;
+		String[] ids;
+		ArrayList<String[]> returned = new ArrayList<String[]>();
+		
+		Cursor cursor = db.rawQuery("SELECT * FROM EVENT" + " WHERE name LIKE ? ", new String[] {"%"+searchString+"%"});
+		
+		if (cursor != null) {
+			cursor.moveToFirst();
+			
+			results = new String[cursor.getCount()];
+			ids = new String[cursor.getCount()];
+			
+			for (int i = 0; !cursor.isAfterLast(); i++) {
+				results[i] = cursor.getString(DatabaseHelper.EVENT_NAME);
+				ids[i] = cursor.getString(DatabaseHelper.EVENT_ID);
+				cursor.moveToNext();
+			}
+		}
+		
+		else {
+			results = new String[]{""};
+			ids = new String[]{""};
+		}
+		returned.add(0, results);
+		returned.add(1, ids);
+		
+		return returned;
+	}
 
 	/**
 	 * Method to update an event that is currently in the database.
@@ -395,12 +432,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	/**
-	 * Method used to delete a particular event from the b using an id
+	 * Method used to delete a particular event from the db using an id
 	 * 
 	 * @param id		of the event to be deleted
 	 */
 	public void deleteEvent(int id) {
 		db.delete("EVENT", "_id="+id, null);
+	}
+	
+	/**
+	 * Method used to delete a particular complete event from the db using an id
+	 * 
+	 * @param id		of the complete event to be deleted
+	 */
+	public void deleteCompleteEvent(int id) {
+		db.delete("COMPLETE_EVENT", "_id="+id, null);
 	}
 	
 	

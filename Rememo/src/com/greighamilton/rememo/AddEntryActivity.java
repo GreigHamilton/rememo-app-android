@@ -45,6 +45,8 @@ public class AddEntryActivity extends Activity {
     private Bundle extras;
     private int currentId;
     
+    private int eventComplete;
+    
     private AlarmManager alarmManager;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -78,26 +80,31 @@ public class AddEntryActivity extends Activity {
         super.onResume();
         
         db = DatabaseHelper.getInstance(this);
-
-        // get the current date and time
-        day = Util.getTodaysDay();
-        month = Util.getTodaysMonth();
-        year = Util.getTodaysYear();
-        
-        minute = Util.getCurrentMinute();
-        hour = Util.getCurrentHour();
         
         // check if extras (i.e. it is an edit)
         extras = getIntent().getExtras();
+        
 
         // if there are extras, then this is an update to a current event
         if (extras != null) {
         	
+        	eventComplete = extras.getInt("eventComplete");
+        	
             currentId = extras.getInt("eventId");
             String eventName = extras.getString("eventName");
             String eventDateTime = extras.getString("eventDateTime");
+            
             String eventDate = eventDateTime.substring(8, 10) + "-" + eventDateTime.substring(5, 7) + "-" + eventDateTime.substring(0, 4);
             String eventTime = eventDateTime.substring(11, 13) + ":" + eventDateTime.substring(14, 16);
+            
+            year = Integer.parseInt(eventDateTime.substring(0, 4));
+            month = Integer.parseInt(eventDateTime.substring(5, 7));
+            day = Integer.parseInt(eventDateTime.substring(8, 10));
+            
+            minute = Integer.parseInt(eventDateTime.substring(14, 16));
+            hour = Integer.parseInt(eventDateTime.substring(11, 13));
+           
+            
             int eventCircled = extras.getInt("eventCircled");
         	int eventUnderlined = extras.getInt("eventUnderlined");
         	int eventStarred = extras.getInt("eventStarred");
@@ -127,8 +134,19 @@ public class AddEntryActivity extends Activity {
             TextView editEventNotes = (TextView) findViewById(R.id.entry_notes);
             editEventNotes.setText(eventNotes);
         }
+        
+        else {
+        	// get the current date and time
+            day = Util.getTodaysDay();
+            month = Util.getTodaysMonth();
+            year = Util.getTodaysYear();
+            
+            minute = Util.getCurrentMinute();
+            hour = Util.getCurrentHour();
+        }
     }
 
+	@SuppressWarnings("static-access")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -167,10 +185,10 @@ public class AddEntryActivity extends Activity {
 				// Get highlighting options selected
 				int circled;
 				final CheckBox circledCheckBox = (CheckBox) findViewById(R.id.entry_circled);
-				if (circledCheckBox.isChecked())
-					circled = 1;
-				else
+				if (!circledCheckBox.isChecked() || circledCheckBox.GONE == 1)
 					circled = 0;
+				else
+					circled = 1;
 
 				int underlined;
 				final CheckBox underlinedCheckBox = (CheckBox) findViewById(R.id.entry_underlined);
@@ -281,10 +299,16 @@ public class AddEntryActivity extends Activity {
 					
 					// update the database
 					db.updateEvent(currentId, name, date_time, circled, underlined, starred, notes);
+					
+					if (eventComplete == 1)
+						db.deleteCompleteEvent(currentId);
 				}
 				else {
 					// add event to db
 					db.addEvent(nextId, name, dateTimeText, circled, underlined, starred, notes);
+					
+					if (eventComplete == 1)
+						db.deleteCompleteEvent(currentId);
 				}
 				
 

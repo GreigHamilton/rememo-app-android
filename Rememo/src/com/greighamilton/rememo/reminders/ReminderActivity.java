@@ -1,4 +1,4 @@
-package com.greighamilton.rememo;
+package com.greighamilton.rememo.reminders;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -26,6 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.greighamilton.rememo.MainActivity;
+import com.greighamilton.rememo.R;
+import com.greighamilton.rememo.R.array;
+import com.greighamilton.rememo.R.id;
+import com.greighamilton.rememo.R.layout;
+import com.greighamilton.rememo.R.raw;
 import com.greighamilton.rememo.data.DatabaseHelper;
 import com.greighamilton.rememo.util.Util;
 
