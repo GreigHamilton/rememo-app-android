@@ -5,37 +5,37 @@
         android:key="pref_set_colour"
         android:title="Reminder Colour" >
 
-        <com.greighamilton.rememo.data.ColourDialogPreference
+        <com.greighamilton.rememo.dialogs.ColourDialogPreference
             android:dialogMessage="Choose colour for reminders."
             android:key="pref_set_colour"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Colour"
             android:summary="Choose colour for reminders."
             android:title="Set Colour" >
-        </com.greighamilton.rememo.data.ColourDialogPreference>
+        </com.greighamilton.rememo.dialogs.ColourDialogPreference>
     </PreferenceCategory>
     
     <PreferenceCategory
         android:key="pref_set_music"
         android:title="Reminder Sound" >
 
-        <com.greighamilton.rememo.data.MusicDialogPreference
+        <com.greighamilton.rememo.dialogs.MusicDialogPreference
             android:dialogMessage="Choose alert sound for reminders."
             android:key="pref_set_music"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Sound"
             android:summary="Choose alert sound for reminders."
             android:title="Set Sound" >
-        </com.greighamilton.rememo.data.MusicDialogPreference>
+        </com.greighamilton.rememo.dialogs.MusicDialogPreference>
         
-        <com.greighamilton.rememo.data.MusicLengthDialogPreference
+        <com.greighamilton.rememo.dialogs.MusicLengthDialogPreference
             android:dialogMessage="Choose alert sound length for reminders."
             android:key="pref_set_music_length"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Length"
             android:summary="Choose alert sound length for reminders in seconds (1 -> 10 Seconds)."
             android:title="Set Length" >
-        </com.greighamilton.rememo.data.MusicLengthDialogPreference>
+        </com.greighamilton.rememo.dialogs.MusicLengthDialogPreference>
     </PreferenceCategory>
 
 </PreferenceScreen>
