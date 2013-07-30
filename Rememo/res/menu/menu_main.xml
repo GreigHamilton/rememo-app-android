@@ -3,11 +3,15 @@
     <item android:id="@+id/action_addentry"
           android:title="@string/action_addentry"
           android:orderInCategory="100"
-          android:showAsAction="always"
-          android:icon="@android:drawable/ic_menu_add" />
+          android:showAsAction="always" />
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    
+    <item android:id="@+id/action_incomplete"
+        android:title="Incomplete Events"
         android:orderInCategory="100"
         android:showAsAction="never" />
     

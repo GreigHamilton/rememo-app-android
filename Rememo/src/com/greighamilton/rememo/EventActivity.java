@@ -11,10 +11,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
+import com.greighamilton.rememo.data.SettingsActivity;
 import com.greighamilton.rememo.util.Util;
 
 public class EventActivity extends Activity {
@@ -26,6 +28,7 @@ public class EventActivity extends Activity {
 	private int eventUnderlined;
 	private int eventStarred;
 	private String eventNotes;
+	private int eventOptions;
 	
 	private int eventComplete;
 	
@@ -61,11 +64,20 @@ public class EventActivity extends Activity {
 		eventUnderlined = eventCursor.getInt(DatabaseHelper.EVENT_UNDERLINE);
 		eventStarred = eventCursor.getInt(DatabaseHelper.EVENT_STARRED);
 		eventNotes = eventCursor.getString(DatabaseHelper.EVENT_NOTES);
+		eventOptions = eventCursor.getInt(DatabaseHelper.EVENT_OPTIONS);
 		
 		// set the views
 		TextView name = (TextView) findViewById(R.id.event_name_text);
 		name.setTypeface(null, Typeface.BOLD);
 		name.setText(eventName);
+		
+		if (eventOptions == 1)
+			name.setTextColor(getResources().getColor(R.color.Green));
+		if (eventOptions == 2)
+			name.setTextColor(getResources().getColor(R.color.Red));
+		
+		
+		
 		if (extras.getInt("eventComplete") == 1)
 			name.setPaintFlags(name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		
@@ -122,6 +134,12 @@ public class EventActivity extends Activity {
         		finish();
             return true;
             
+        	case R.id.action_settings:
+                i = new Intent(EventActivity.this,
+                        SettingsActivity.class);
+                EventActivity.this.startActivity(i);
+                break;
+            
         	case R.id.action_edit:
         		// edit event in db
         		i = new Intent(EventActivity.this, AddEntryActivity.class);
@@ -133,6 +151,7 @@ public class EventActivity extends Activity {
 				i.putExtra("eventStarred", eventStarred);
 				i.putExtra("eventNotes", eventNotes);
 				i.putExtra("eventComplete", eventComplete);
+				i.putExtra("eventOptions", eventOptions);
 				startActivity(i);
 				EventActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 				
@@ -148,9 +167,6 @@ public class EventActivity extends Activity {
                 // Setting Dialog Message
                 alertDialog.setMessage("Are you sure you want delete this?");
          
-                // Setting Icon to Dialog
-                alertDialog.setIcon(R.drawable.ic_menu_delete);
-         
                 // Setting Positive "Yes" Button
                 alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int which) {
@@ -158,6 +174,10 @@ public class EventActivity extends Activity {
                     
                     // delete event from db
                 	db.deleteEvent(eventId);
+                	
+                	if (eventComplete == 1) {
+                		db.deleteCompleteEvent(eventId);
+                	}
                 	
                 	finish();
                     }
@@ -176,4 +196,36 @@ public class EventActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+	
+	public void alreadyComplete(View v) {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(EventActivity.this);
+   	 
+        // Setting Dialog Title
+        alertDialog.setTitle("Confirm Done.");
+ 
+        // Setting Dialog Message
+        alertDialog.setMessage("Are you sure this is already done?");
+ 
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+            
+            // delete event from db
+        	db.addToCompleteEvents(eventId);
+        	
+        	finish();
+            }
+        });
+ 
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            
+            dialog.cancel();
+            }
+        });
+ 
+        // Showing Alert Message
+        alertDialog.show();
+	}
 }

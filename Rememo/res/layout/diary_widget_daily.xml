@@ -110,5 +110,12 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:orientation="horizontal" />
+    
+    <LinearLayout
+    	android:id="@+id/diary_daily_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal" />
 
 </LinearLayout>

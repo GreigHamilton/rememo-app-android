@@ -18,6 +18,8 @@ import com.greighamilton.rememo.data.DatabaseHelper;
 public class SearchResultsActivity extends Activity {
 	
 	private DatabaseHelper db;
+	
+	private String queryString;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,11 +33,22 @@ public class SearchResultsActivity extends Activity {
 			
 			db = DatabaseHelper.getInstance(this);
 			
+			queryString = query;
+			
 			doMySearch(query);
 		}
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+
+	@Override
+    protected void onResume() {
+        super.onResume();
+
+        db = DatabaseHelper.getInstance(this);
+        
+        doMySearch(queryString);
+    }
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {

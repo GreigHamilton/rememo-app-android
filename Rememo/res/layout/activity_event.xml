@@ -7,43 +7,73 @@
 
     <!-- Day text -->
 
-    <TextView
-        android:id="@+id/event_name_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:text="Event Name"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/event_date_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:text="26 July 2013" />
+        <TextView
+            android:id="@+id/event_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/event_time_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:text="11:00" />
+        <TextView
+            android:id="@+id/event_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="26 July 2013" />
 
-    <TextView
-        android:id="@+id/event_notes_title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:paddingTop="30dp"
-        android:text="Notes:" />
+        <TextView
+            android:id="@+id/event_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11:00" />
 
-    <TextView
-        android:id="@+id/event_notes_text"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/event_notes_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:text="Notes:" />
+
+        <TextView
+            android:id="@+id/event_notes_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:text="no notes for this event."
+            android:textStyle="normal|italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingTop="5dp"
-        android:text="no notes for this event."
-        android:textStyle="normal|italic" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  "
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/button2"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Already Done It!"
+            android:onClick="alreadyComplete" />
+
+    </LinearLayout>
 
 </LinearLayout>

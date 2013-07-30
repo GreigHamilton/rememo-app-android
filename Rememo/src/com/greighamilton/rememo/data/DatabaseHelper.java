@@ -45,10 +45,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final int EVENT_UNDERLINE = 4;
 	public static final int EVENT_STARRED = 5;
 	public static final int EVENT_NOTES = 6;
+	public static final int EVENT_OPTIONS = 7;
 	
 	public static final int COMPLETE_EVENT_ID = 0;
 
-	
+	private static final int DATABASE_VERSION = 11;
 	
 	// The Android's default system path of your application database.
 	private static final String DB_PATH = "/data/data/com.greighamilton.rememo/databases/";
@@ -62,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * Constructor
 	 */
 	public DatabaseHelper(Context context) {
-		super(context, DB_NAME, null, 1);
+		super(context, DB_NAME, null, DATABASE_VERSION);
 		this.context = context;
 
 		exists = checkDatabaseExists();
@@ -208,7 +209,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// stub if needed
+		
+		Log.i("UPGRADE", "UPGRADE");
+		
+		db.execSQL("ALTER TABLE EVENT ADD COLUMN options INTEGER DEFAULT 0");
+	}
+	
+	public void onUpgrade(DatabaseHelper db2, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		Log.i("UPGRADE DUE", "HIYAZ");
+		
+		db.execSQL("ALTER TABLE EVENT ADD COLUMN options INTEGER DEFAULT 0");
 	}
 
 	/**
@@ -230,8 +241,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * 
 	 * @return				insertion into the db
 	 */
-	public int addEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes) {
-		ContentValues cv = new ContentValues(7);
+	public int addEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes, int options) {
+		ContentValues cv = new ContentValues(8);
 		cv.put("_id", nextId);
 		cv.put("name", name);
 		cv.put("date_time", date_time);
@@ -239,6 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put("underlined", underlined);
 		cv.put("starred", starred);
 		cv.put("notes", notes);
+		cv.put("options", options);
 
 		return (int) db.insert("EVENT", null, cv);
 	}
@@ -363,7 +375,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @return					a cursor pointing to before the first result of the query
 	 */
 	public Cursor getEventsByDate(String date, boolean ascendingOrder) {
-		Log.i("DATE DB", date);
+		
 		String clause = null;
 		String order = (ascendingOrder) ? "date_time asc" : "date_time desc";
 		
@@ -381,7 +393,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String[] ids;
 		ArrayList<String[]> returned = new ArrayList<String[]>();
 		
-		Cursor cursor = db.rawQuery("SELECT * FROM EVENT" + " WHERE name LIKE ? ", new String[] {"%"+searchString+"%"});
+		Cursor cursor = db.query("EVENT", null, "name LIKE ?", new String[] {"%"+searchString+"%"}, null, null, "date_time asc");
 		
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -405,6 +417,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		return returned;
 	}
+	
+	public ArrayList<String[]> allIncompleteEvents() {
+		
+		String[] results;
+		String[] ids;
+		
+		String[] finalResults;
+		String[] finalIds;
+		
+		ArrayList<String[]> returned = new ArrayList<String[]>();
+		
+		Cursor cursor = db.query("EVENT", null, null, null, null, null, "date_time asc");
+		
+		int count = 0;
+		
+		if (cursor != null) {
+			cursor.moveToFirst();
+			
+			results = new String[cursor.getCount()];
+			ids = new String[cursor.getCount()];
+			
+			for (int i = 0; !cursor.isAfterLast(); ) {
+				int id = Integer.parseInt(cursor.getString(DatabaseHelper.EVENT_ID));
+				
+				if (isEventComplete(id)) {
+					// already complete, don't add to results
+					cursor.moveToNext();
+				}
+				else {
+					String name = cursor.getString(DatabaseHelper.EVENT_NAME);
+					
+					results[i] = name;
+					ids[i] = ""+id;
+					
+					i++;
+					cursor.moveToNext();
+					count++;
+				}				
+			}
+			
+			finalResults = new String[count];
+			finalIds = new String[count];
+			
+			for (int i = 0; i < count; i++) {
+				finalResults[i] = results[i];
+				finalIds[i] = ids[i];
+			}
+		}
+		
+		else {
+			finalResults = new String[]{""};
+			finalIds = new String[]{""};
+		}
+		
+		returned.add(0, finalResults);
+		returned.add(1, finalIds);
+		
+		return returned;
+	}
 
 	/**
 	 * Method to update an event that is currently in the database.
@@ -417,9 +488,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @param starred		if the event is starred (1 if true)
 	 * @param notes			the notes of the event
 	 */
-	public void updateEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes) {
+	public void updateEvent(int nextId, String name, String date_time, int circled, int underlined, int starred, String notes, int options) {
 		
-		ContentValues cv = new ContentValues(7);
+		ContentValues cv = new ContentValues(8);
 		cv.put("_id", nextId);
 		cv.put("name", name);
 		cv.put("date_time", date_time);
@@ -427,6 +498,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put("underlined", underlined);
 		cv.put("starred", starred);
 		cv.put("notes", notes);
+		cv.put("options", options);
 
 		db.update("EVENT", cv, "_id="+nextId, null);
 	}
@@ -447,6 +519,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public void deleteCompleteEvent(int id) {
 		db.delete("COMPLETE_EVENT", "_id="+id, null);
+	}
+	
+	public Cursor getEvents() {
+		return db.query("EVENT", null, null, null, null, null, "_id asc");
 	}
 	
 	
@@ -497,6 +573,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			instance.openDatabase();
 		}
 	}
+
+
+	
+
+
+	
 
 
 

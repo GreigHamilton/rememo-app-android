@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.greighamilton.rememo"
-    android:versionCode="3"
-    android:versionName="1.0" >
+    android:versionCode="8"
+    android:versionName="1.1.2" >
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -79,10 +79,17 @@
         <activity
             android:name="com.greighamilton.rememo.EventActivity"
             android:label="@string/title_activity_event" >
-            
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.greighamilton.rememo.DailyActivity" />
+        </activity>
+        <activity
+            android:name="com.greighamilton.rememo.IncompleteActivity"
+            android:label="@string/title_activity_incomplete"
+            android:parentActivityName="com.greighamilton.rememo.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.greighamilton.rememo.MainActivity" />
         </activity>
     </application>
 

@@ -16,6 +16,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -28,10 +29,6 @@ import android.widget.Toast;
 
 import com.greighamilton.rememo.MainActivity;
 import com.greighamilton.rememo.R;
-import com.greighamilton.rememo.R.array;
-import com.greighamilton.rememo.R.id;
-import com.greighamilton.rememo.R.layout;
-import com.greighamilton.rememo.R.raw;
 import com.greighamilton.rememo.data.DatabaseHelper;
 import com.greighamilton.rememo.util.Util;
 
@@ -53,6 +50,7 @@ public class ReminderActivity extends Activity {
 	private int minute;
 	
 	private String colourString;
+	private String textColourString;
 	
 	private int eventId;
 	private String eventName;
@@ -67,11 +65,15 @@ public class ReminderActivity extends Activity {
 	
 	private TextView reminderText;
 	private LinearLayout reminderBackground;
+	
 	private Button changeButton;
 	private Button doneButton;
 	private Button laterButton;
+	private TextView tapMeText;
 	
 	private MediaPlayer mp;
+	
+	private int eventOptions;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +83,21 @@ public class ReminderActivity extends Activity {
         sp = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());	
         colourString = sp.getString("COLOUR", "");
         
+        textColourString = sp.getString("TEXTCOLOUR", "");
+        
         db = DatabaseHelper.getInstance(this);
+        
+        tapMeText = (TextView) findViewById(R.id.reminder_taphere);
+        tapMeText.setVisibility(View.VISIBLE);
         
         reminderText = (TextView) findViewById(R.id.reminder_text);
         reminderText.setText(getIntent().getExtras().getString("EventName"));
+        try {
+        	reminderText.setTextColor(Color.parseColor(textColourString));
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	reminderText.setTextColor(Color.BLACK);
+        }
         
         reminderBackground = (LinearLayout) findViewById(R.id.reminder_colour);
         try {
@@ -195,6 +208,8 @@ public class ReminderActivity extends Activity {
     	laterButton.setVisibility(View.VISIBLE);
     	
     	reminderText.setVisibility(View.VISIBLE);
+    	
+    	tapMeText.setVisibility(View.GONE);
     }
     
     /**
@@ -242,8 +257,17 @@ public class ReminderActivity extends Activity {
 
 		// ---deletes the alarm to trigger---
 		
-		alarmManager.cancel(alarmIntent);
-		alarmManager.cancel(notificationIntent);
+		try {
+			alarmManager.cancel(alarmIntent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			alarmManager.cancel(notificationIntent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		// add this event to complete events
@@ -304,7 +328,9 @@ public class ReminderActivity extends Activity {
 		// ---deletes the alarm to trigger---
 		
 		alarmManager.cancel(alarmIntent);
+		
 		alarmManager.cancel(notificationIntent);
+
     	
     	DialogFragment newFragment = new PostponeReminderPickerFragment();
 		newFragment.show(getFragmentManager(), "postponePicker");
@@ -335,12 +361,23 @@ public class ReminderActivity extends Activity {
 			
 			delayTimes = getResources().getStringArray(R.array.reminder_delay_times);
 			
+			builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog,int which) {
+                dismiss();
+                }
+            });
+			
 			builder.setItems(delayTimes,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int item) {
 							// The 'which' argument contains the index position
 							// of the selected item
 							String selectedDelay = delayTimes[item];
+							
+							Cursor e = db.getEvent(eventId);
+							e.moveToFirst();
+							
+							eventOptions = e.getInt(DatabaseHelper.EVENT_OPTIONS);
 							
 							// ---get current date and time---
 							Calendar calendar = Calendar.getInstance();
@@ -373,7 +410,17 @@ public class ReminderActivity extends Activity {
 								String tomorrowDate = Util.getTomorrowsDate(eventDate);
 								String tomorrowTime = eventDate.substring(11);
 								String timeTomorrow = tomorrowDate + " " + tomorrowTime;
-								db.updateEvent(eventId, eventName, timeTomorrow, circled, underlined, starred, eventNotes);
+								db.updateEvent(eventId, eventName, timeTomorrow, circled, underlined, starred, eventNotes, eventOptions);
+							}
+							if (delayTimes[item].equals("Next Week")) {
+								calendar.add(Calendar.DAY_OF_MONTH, 7);
+								Toast.makeText(getApplicationContext(), "You will be reminded again next week.", Toast.LENGTH_LONG).show();
+								
+								// increment the date and update the event
+								String nextWeekDate = Util.getNextWeeksDate(eventDate);
+								String nextWeekTime = eventDate.substring(11);
+								String timeNextWeek = nextWeekDate + " " + nextWeekTime;
+								db.updateEvent(eventId, eventName, timeNextWeek, circled, underlined, starred, eventNotes, eventOptions);
 							}
 							
 							// ------------------------------------
@@ -453,6 +500,12 @@ public class ReminderActivity extends Activity {
 			final String[] colours;
 			
 			colours = getResources().getStringArray(R.array.reminder_colours);
+			
+			builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog,int which) {
+                dismiss();
+                }
+            });
 			
 			builder.setItems(colours,
 					new DialogInterface.OnClickListener() {

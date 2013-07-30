@@ -1,139 +1,262 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- @author	Greig Hamilton -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
     <LinearLayout
-            android:id="@+id/entry_linearlayout_1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
+        android:id="@+id/entry_linearlayout_1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
         <!-- Name -->
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="NAME"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/blue1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="NAME"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
 
         <!-- Name -->
+
         <EditText
-                android:id="@+id/entry_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Name (e.g. Dentist Appointment)" >
+            android:id="@+id/entry_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Name (e.g. Dentist Appointment)" >
 
             <requestFocus />
         </EditText>
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="20dp"
-                android:text="DATE AND TIME"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/blue1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="DATE AND TIME"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
 
         <LinearLayout
-                android:id="@+id/addentry_linearlayout_2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp" >
+            android:id="@+id/addentry_linearlayout_2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" >
 
             <!-- Date -->
+
             <Button
-                    android:id="@+id/entry_date"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="selectDate"
-                    android:padding="10dp"
-                    android:text="Date"
-                    android:layout_weight="1"/>
-
-            <!-- Time -->
-            <Button
-                    android:id="@+id/entry_time"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="selectTime"
-                    android:padding="10dp"
-                    android:text="Time"
-                    android:layout_weight="1"/>
-        </LinearLayout>
-
-        <!-- Category -->
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="20dp"
-                android:text="HIGHLIGHTING"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/blue1" />
-
-        <LinearLayout
-                android:id="@+id/entry_linearlayout_2"
+                android:id="@+id/entry_date"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp" >
+                android:layout_weight="1"
+                android:onClick="selectDate"
+                android:padding="10dp"
+                android:text="Date" />
 
-            <RadioGroup
-                    android:id="@+id/entry_radiogroup"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+            <!-- Time -->
 
-            </RadioGroup>
+            <Button
+                android:id="@+id/entry_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="selectTime"
+                android:padding="10dp"
+                android:text="Time" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="REMINDER OPTIONS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  Remind me "
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
+            <EditText
+                android:id="@+id/remind_before_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:ems="5"
+                android:inputType="number" />
 
-        <!-- Repetition -->
+            <Spinner
+                android:id="@+id/remind_before_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20" />
+        </LinearLayout>
 
-        <!-- Notes -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <CheckBox
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  before the event.              "
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  "
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/remind_me_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="check to also remind me at time of event. " />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="HIGHLIGHTING OPTIONS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
             android:id="@+id/entry_circled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Circled" />
+            android:text="" />
+            
+            <TextView
+                android:id="@+id/entry_circled_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Circled"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
 
-        <CheckBox
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            
+            <CheckBox
             android:id="@+id/entry_underlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Underlined" />
+            android:text="" />
+            
+            <TextView
+                android:id="@+id/entry_underlined_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Underlined"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
 
-        <CheckBox
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            
+            <CheckBox
             android:id="@+id/entry_starred"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Starred" />
-
-        <TextView
+            android:text="" />
+            
+            <TextView
+                android:id="@+id/entry_starred_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="20dp"
-                android:text="NOTES"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/blue1" />
+                android:text="Starred *"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="EVENT OPTIONS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <RadioGroup
+            android:id="@+id/entry_radiogroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/entry_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Normal" />
+            
+            <RadioButton
+                android:id="@+id/entry_important"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Important"
+                android:textColor="@color/Green" />
+
+            <RadioButton
+                android:id="@+id/entry_urgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Urgent"
+                android:textColor="@color/Red" />
+            
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="NOTES"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
 
         <EditText
-                android:id="@+id/entry_notes"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Additional Info (Optional)"
-                android:inputType="textMultiLine" />
+            android:id="@+id/entry_notes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Additional Info (Optional)"
+            android:inputType="textMultiLine" />
     </LinearLayout>
 
 </ScrollView>
