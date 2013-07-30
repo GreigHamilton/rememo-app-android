@@ -8,10 +8,12 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
 import com.greighamilton.rememo.data.SettingsActivity;
+import com.greighamilton.rememo.util.Update;
 import com.greighamilton.rememo.util.Util;
 
 /**
@@ -46,6 +49,9 @@ public class MainActivity extends Activity {
     
     private String selectedWeekStartDate;
     private String selectedWeekEndDate;
+    
+    private SharedPreferences sp;
+    private int diaryLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +59,35 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
         
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+        diaryLayout = sp.getInt("DIARY", 0);
+        
         // get the current week start and end dates
         String[] thisWeekDates = Util.getCurrentWeekDates().split("#");
         currentWeekStartDate = thisWeekDates[0];
         currentWeekEndDate = thisWeekDates[1];
         
-        // set the selected week start and end dates as the current week start and end dates
-        selectedWeekStartDate = currentWeekStartDate;
-        selectedWeekEndDate = currentWeekEndDate;
+        if (diaryLayout == 0) {
+        	// set the selected week start and end dates as the current week start and end dates
+        	selectedWeekStartDate = currentWeekStartDate;
+        	selectedWeekEndDate = currentWeekEndDate;
+        }
+        else if (diaryLayout == 1) {
+        	// set selected start week to today
+        	selectedWeekStartDate = Util.getTodaysDate();
+        	selectedWeekEndDate = Util.getWeekFromDate(selectedWeekStartDate);
+        }
+        else if (diaryLayout == 2) {
+        	// set selected start week to minus 3 days
+        	selectedWeekStartDate = Util.getThreeDaysBeforeDate(Util.getTodaysDate());
+        	selectedWeekEndDate = Util.getThreeDaysAfterDate(Util.getTodaysDate());
+        }
+        
         
         // currently selected date is null
         selectedDate = null;
+        
+        Update.doUpdate(this);
     }
 
     @Override
@@ -71,6 +95,9 @@ public class MainActivity extends Activity {
         super.onResume();
 
         db = DatabaseHelper.getInstance(this);
+        
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+        diaryLayout = sp.getInt("DIARY", 0);
         
         widgets = new ArrayList<LinearLayout>();
         
@@ -80,6 +107,22 @@ public class MainActivity extends Activity {
         currentWeekEndDate = thisWeekDates[1];
         
         selectedDate = null;
+        
+        if (diaryLayout == 0) {
+        	// set the selected week start and end dates as the current week start and end dates
+        	selectedWeekStartDate = currentWeekStartDate;
+        	selectedWeekEndDate = currentWeekEndDate;
+        }
+        else if (diaryLayout == 1) {
+        	// set selected start week to today
+        	selectedWeekStartDate = Util.getTodaysDate();
+        	selectedWeekEndDate = Util.getWeekFromDate(selectedWeekStartDate);
+        }
+        else if (diaryLayout == 2) {
+        	// set selected start week to minus 3 days
+        	selectedWeekStartDate = Util.getThreeDaysBeforeDate(Util.getTodaysDate());
+        	selectedWeekEndDate = Util.getThreeDaysAfterDate(Util.getTodaysDate());
+        }
 
         setUpWidgets();
     }
@@ -157,6 +200,12 @@ public class MainActivity extends Activity {
 		        	eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
 					
 					eventText.setPadding(35, 0, 0, 0);
+					
+					int options = eventsCursor.getInt(DatabaseHelper.EVENT_OPTIONS);
+					if (options == 1)
+						eventText.setTextColor(getResources().getColor(R.color.Green));
+					if (options == 2)
+						eventText.setTextColor(getResources().getColor(R.color.Red));
 					
 					// check if event has been done, if it has strikethrough the text
 		        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
@@ -243,6 +292,12 @@ public class MainActivity extends Activity {
             case R.id.action_addentry:
                 i = new Intent(MainActivity.this,
                         AddEntryActivity.class);
+                MainActivity.this.startActivity(i);
+                break;
+                
+            case R.id.action_incomplete:
+                i = new Intent(MainActivity.this,
+                        IncompleteActivity.class);
                 MainActivity.this.startActivity(i);
                 break;
 

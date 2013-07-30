@@ -7,7 +7,10 @@ import android.content.SharedPreferences;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.greighamilton.rememo.R;
 
@@ -20,12 +23,47 @@ import com.greighamilton.rememo.R;
 public class ColourDialogPreference extends DialogPreference {
 	
 	private SharedPreferences sp;
+	
+	private String currentColour;
 
     public ColourDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setDialogLayoutResource(R.layout.dialog_set_colour);
         
+        
         sp = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        
+        currentColour = sp.getString("COLOUR", "#F21818");
+    }
+    
+    @Override
+    protected void onBindDialogView(View view) {
+    	
+    	RadioButton red = (RadioButton) view.findViewById(R.id.colour_red);
+    	RadioButton orange = (RadioButton) view.findViewById(R.id.colour_orange);
+    	RadioButton yellow = (RadioButton) view.findViewById(R.id.colour_yellow);
+    	RadioButton green = (RadioButton) view.findViewById(R.id.colour_green);
+    	RadioButton blue = (RadioButton) view.findViewById(R.id.colour_blue);
+     
+    	RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.colourSelect);  
+    	
+    	Log.i("current colour", currentColour);
+    	if (currentColour == "#F21818")
+    		radioGroup.check(red.getId());
+    	
+    	else if (currentColour == "#FFAB19")
+    		radioGroup.check(orange.getId());
+    	
+    	else if (currentColour == "#F5F50C")
+    		radioGroup.check(yellow.getId());
+    	
+    	else if (currentColour == "#3ECF4F")
+    		radioGroup.check(green.getId());
+    	
+    	else if (currentColour == "#1885F2")
+    		radioGroup.check(blue.getId());
+     
+        super.onBindDialogView(view);
     }
 
     /**

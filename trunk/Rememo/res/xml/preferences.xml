@@ -2,17 +2,40 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     
     <PreferenceCategory
-        android:key="pref_set_colour"
-        android:title="Reminder Colour" >
+        android:key="pref_set_diary"
+        android:title="Diary Layout" >
+
+        <com.greighamilton.rememo.dialogs.DiaryDialogPreference
+            android:dialogMessage="Choose layout for diary."
+            android:key="pref_set_diary"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="Save Layout"
+            android:summary="Choose layout for diary."
+            android:title="Set Layout" >
+        </com.greighamilton.rememo.dialogs.DiaryDialogPreference>
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:key="pref_set_colour_cat"
+        android:title="Reminder Colours" >
 
         <com.greighamilton.rememo.dialogs.ColourDialogPreference
-            android:dialogMessage="Choose colour for reminders."
+            android:dialogMessage="Choose colour for reminder background.."
             android:key="pref_set_colour"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Colour"
-            android:summary="Choose colour for reminders."
-            android:title="Set Colour" >
+            android:summary="Choose colour for reminder background."
+            android:title="Reminder Colour" >
         </com.greighamilton.rememo.dialogs.ColourDialogPreference>
+        
+        <com.greighamilton.rememo.dialogs.TextColourDialogPreference
+            android:dialogMessage="Choose colour for reminder text."
+            android:key="pref_set_text_colour"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="Save Colour"
+            android:summary="Choose colour for reminder text."
+            android:title="Text Colour" >
+        </com.greighamilton.rememo.dialogs.TextColourDialogPreference>
     </PreferenceCategory>
     
     <PreferenceCategory
@@ -33,7 +56,7 @@
             android:key="pref_set_music_length"
             android:negativeButtonText="Cancel"
             android:positiveButtonText="Save Length"
-            android:summary="Choose alert sound length for reminders in seconds (1 -> 10 Seconds)."
+            android:summary="Choose alert sound length for reminders in seconds (1 -> Maximum)."
             android:title="Set Length" >
         </com.greighamilton.rememo.dialogs.MusicLengthDialogPreference>
     </PreferenceCategory>

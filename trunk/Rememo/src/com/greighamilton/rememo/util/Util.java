@@ -543,6 +543,20 @@ public class Util {
         cal.add(Calendar.DAY_OF_MONTH, 1);   
         return format.format(cal.getTime());
 	}
+	
+	public static String getNextWeeksDate(String date) {
+		
+		int day = Integer.parseInt(date.substring(8, 10));
+		int month = Integer.parseInt(date.substring(5, 7))-1;
+		int year = Integer.parseInt(date.substring(0, 4));
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        cal.add(Calendar.DAY_OF_MONTH, 7);   
+        return format.format(cal.getTime());
+	}
 
 	public static String getYesterdaysDate(String date) {
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -554,6 +568,48 @@ public class Util {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day);
         cal.add(Calendar.DAY_OF_MONTH, -1);   
+        return format.format(cal.getTime());
+	}
+
+	public static String getWeekFromDate(String date) {
+		
+		int day = Integer.parseInt(date.substring(8, 10));
+		int month = Integer.parseInt(date.substring(5, 7))-1;
+		int year = Integer.parseInt(date.substring(0, 4));
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        cal.add(Calendar.DAY_OF_MONTH, 7);   
+        return format.format(cal.getTime());
+	}
+	
+	public static String getThreeDaysBeforeDate(String date) {
+		
+		int day = Integer.parseInt(date.substring(8, 10));
+		int month = Integer.parseInt(date.substring(5, 7))-1;
+		int year = Integer.parseInt(date.substring(0, 4));
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        cal.add(Calendar.DAY_OF_MONTH, -3);   
+        return format.format(cal.getTime());
+	}
+	
+public static String getThreeDaysAfterDate(String date) {
+		
+		int day = Integer.parseInt(date.substring(8, 10));
+		int month = Integer.parseInt(date.substring(5, 7))-1;
+		int year = Integer.parseInt(date.substring(0, 4));
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        cal.add(Calendar.DAY_OF_MONTH, 4);   
         return format.format(cal.getTime());
 	}
 }

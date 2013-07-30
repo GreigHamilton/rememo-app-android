@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import com.greighamilton.rememo.R;
@@ -20,12 +23,26 @@ import com.greighamilton.rememo.R;
 public class MusicLengthDialogPreference extends DialogPreference {
 	
 	private SharedPreferences sp;
+	
+	private int currentMusicTime;
 
     public MusicLengthDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setDialogLayoutResource(R.layout.dialog_set_music_length);
         
-        sp = PreferenceManager.getDefaultSharedPreferences(this.getContext());        
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getContext());   
+        
+        currentMusicTime = sp.getInt("MUSIC_TIME", 0);
+    }
+    
+    @Override
+    protected void onBindDialogView(View view) {
+    	
+    	SeekBar bar = (SeekBar) view.findViewById(R.id.music_length_seekbar);
+    	bar.setProgress(currentMusicTime*10);
+    	
+     
+        super.onBindDialogView(view);
     }
 
     /**

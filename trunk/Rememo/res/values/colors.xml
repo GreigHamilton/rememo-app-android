@@ -34,5 +34,7 @@
     <color name="Blue">#1885F2</color>
     <color name="Yellow">#F5F50C</color>
     <color name="Orange">#FFAB19</color>
+    
+    <color name="Black">#000000</color>
 
 </resources>

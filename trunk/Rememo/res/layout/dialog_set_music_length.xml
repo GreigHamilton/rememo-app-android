@@ -27,7 +27,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/music_length_seekbar"
         android:gravity="center"
-        android:text="@string/set_music_length_dialog_max" />
+        android:text="Max" />
 
     <!-- seekbar for selecting length of musicon -->
     <SeekBar

@@ -118,7 +118,7 @@ public class DailyActivity extends Activity {
 		LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container_daily);
 
 		// day
-		day.setText("Incomplete Tasks");
+		day.setText("Still To Do Today");
 		day.setTypeface(null, Typeface.BOLD);
 		
 		// events
@@ -157,6 +157,12 @@ public class DailyActivity extends Activity {
     	    	TextView eventText = new TextView(this);
     			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
     			
+    			int options = eventsCursor.getInt(DatabaseHelper.EVENT_OPTIONS);
+				if (options == 1)
+					eventText.setTextColor(getResources().getColor(R.color.Green));
+				if (options == 2)
+					eventText.setTextColor(getResources().getColor(R.color.Red));
+    			
     			// set some padding for the notes line
     			TextView eventPaddingNotes = new TextView(this);
     			eventPaddingNotes.setText("\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t ");
@@ -193,6 +199,8 @@ public class DailyActivity extends Activity {
     	    	diaryLine.setTag(R.id.diary_daily_underlined, eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE));
     	    	diaryLine.setTag(R.id.diary_daily_starred, eventsCursor.getInt(DatabaseHelper.EVENT_STARRED));
     	    	diaryLine.setTag(R.id.diary_daily_notes, eventsCursor.getString(DatabaseHelper.EVENT_NOTES));
+    	    	diaryLine.setTag(R.id.diary_daily_options, eventsCursor.getInt(DatabaseHelper.EVENT_OPTIONS));
+    	    	
     	    	
     	    	// set an onclick listener for each of the diary lines
     	    	diaryLine.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +216,7 @@ public class DailyActivity extends Activity {
                     	final int eventUnderlined = (Integer) v.getTag(R.id.diary_daily_underlined);
                     	final int eventStarred = (Integer) v.getTag(R.id.diary_daily_starred);
 						final String eventNotes = (String) v.getTag(R.id.diary_daily_notes);
+						final int eventOptions = (Integer) v.getTag(R.id.diary_daily_options);
 
 						Intent i = new Intent(DailyActivity.this, EventActivity.class);
 						i.putExtra("eventId", eventId);
@@ -252,7 +261,7 @@ public class DailyActivity extends Activity {
  		complete.setTextColor(Color.GRAY);
 
  		// day
- 		complete.setText("Complete Tasks");
+ 		complete.setText("Already Done Today");
  		complete.setTypeface(null, Typeface.BOLD);
 		
  		Cursor eventsCursorComplete = db.getEventsByDate(selectedDate, Util.getTomorrowsDate(selectedDate), true);
@@ -329,6 +338,7 @@ public class DailyActivity extends Activity {
     	    	diaryLine.setTag(R.id.diary_daily_underlined, eventsCursorComplete.getInt(DatabaseHelper.EVENT_UNDERLINE));
     	    	diaryLine.setTag(R.id.diary_daily_starred, eventsCursorComplete.getInt(DatabaseHelper.EVENT_STARRED));
     	    	diaryLine.setTag(R.id.diary_daily_notes, eventsCursorComplete.getString(DatabaseHelper.EVENT_NOTES));
+    	    	diaryLine.setTag(R.id.diary_daily_options, eventsCursorComplete.getInt(DatabaseHelper.EVENT_OPTIONS));
     	    	
     	    	// set an onclick listener for each of the diary lines
     	    	diaryLine.setOnClickListener(new View.OnClickListener() {
@@ -344,6 +354,7 @@ public class DailyActivity extends Activity {
                     	final int eventUnderlined = (Integer) v.getTag(R.id.diary_daily_underlined);
                     	final int eventStarred = (Integer) v.getTag(R.id.diary_daily_starred);
 						final String eventNotes = (String) v.getTag(R.id.diary_daily_notes);
+						final int eventOptions = (Integer) v.getTag(R.id.diary_daily_options);
 
 						Intent i = new Intent(DailyActivity.this, EventActivity.class);
 						i.putExtra("eventId", eventId);
