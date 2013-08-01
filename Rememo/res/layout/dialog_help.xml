@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @author	Greig Hamilton -->
+<!-- Layout for set colour dialog -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="INTRODUCTION"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome to Rememo. This applicaion is built to help you remember the things that are important to you. You can add reminders for appointments, lunch dates or anything you would like to be reminded about."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="ADDING EVENTS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You are able to add new events by clicking &apos;ADD ENTRY&apos; from the top right-hand corner of the application. This will allow you to fill in details of a new reminder. Firstly enter the name of your event in the box, then select a date and time. You can then decide if you want to be reminded at the time of the event, before it, both at the time of the event and before it, or not be reminded at all. You can then optionally add notes about your event, or customise the entry further."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="CUSTOMISE ENTRY"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In the &apos;ADD ENTRY&apos; section of the application, you are able to customise some further details about your event. Including annotation (circle, underline or star) or setting events as important or urgent"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="SETTINGS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The settings area of the application allows you to fully customise how you wish to be reminded for all your events, whether it be sounds, and length of sounds, colours of the reminder background and text, and also the layout of the dairy layout."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+</ScrollView>

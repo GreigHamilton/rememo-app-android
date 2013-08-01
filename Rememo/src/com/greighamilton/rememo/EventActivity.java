@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,12 @@ import com.greighamilton.rememo.data.DatabaseHelper;
 import com.greighamilton.rememo.data.SettingsActivity;
 import com.greighamilton.rememo.util.Util;
 
+/**
+ * Class for Event activity.
+ * 
+ * @author Greig Hamilton
+ *
+ */
 public class EventActivity extends Activity {
 	
 	private int eventId;
@@ -114,6 +121,14 @@ public class EventActivity extends Activity {
 			notes.setText(eventNotes);
 		}
 		
+		// if event complete, hide the already done button
+		Button doneButton = (Button) findViewById(R.id.aleardy_done_button);
+		if (eventComplete == 1) {
+			doneButton.setVisibility(View.GONE);
+		}
+		else
+			doneButton.setVisibility(View.VISIBLE);
+		
 		setTitle("Event: " + eventName);
 	}
 
@@ -133,6 +148,11 @@ public class EventActivity extends Activity {
         	case android.R.id.home:
         		finish();
             return true;
+            
+        	case R.id.menu_about:
+                i = new Intent(EventActivity.this, AboutActivity.class);
+                startActivity(i);
+                break;
             
         	case R.id.action_settings:
                 i = new Intent(EventActivity.this,

@@ -59,6 +59,28 @@
             android:summary="Choose alert sound length for reminders in seconds (1 -> Maximum)."
             android:title="Set Length" >
         </com.greighamilton.rememo.dialogs.MusicLengthDialogPreference>
+        
+        <com.greighamilton.rememo.dialogs.MusicRepetitionDialogPreference
+            android:dialogMessage="Choose alert sound repetition time interval for reminders."
+            android:key="pref_set_music_repetition"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="Save Interval"
+            android:summary="Choose alert sound repetition time interval for reminders."
+            android:title="Set Interval" >
+        </com.greighamilton.rememo.dialogs.MusicRepetitionDialogPreference>
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:key="pref_help"
+        android:title="System" >
+
+        <com.greighamilton.rememo.dialogs.HelpDialogPreference
+            android:dialogMessage="Help with using Rememo."
+            android:key="pref_help"
+            
+            android:summary="Help with using Rememo."
+            android:title="Help" >
+        </com.greighamilton.rememo.dialogs.HelpDialogPreference>
     </PreferenceCategory>
 
 </PreferenceScreen>

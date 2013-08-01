@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.greighamilton.rememo"
-    android:versionCode="8"
-    android:versionName="1.1.2" >
+    android:versionCode="9"
+    android:versionName="1.2.0" >
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -91,6 +91,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.greighamilton.rememo.MainActivity" />
         </activity>
+        
+        <activity android:name="com.greighamilton.rememo.AboutActivity" android:theme="@android:style/Theme.Dialog"/>
+        
     </application>
 
 </manifest>

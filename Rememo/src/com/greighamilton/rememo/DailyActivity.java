@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -427,6 +426,11 @@ public class DailyActivity extends Activity {
         	case android.R.id.home:
         		finish();
             return true;
+            
+        	case R.id.menu_about:
+                i = new Intent(DailyActivity.this, AboutActivity.class);
+                startActivity(i);
+                break;
         
     		case R.id.action_addentry:
                 i = new Intent(DailyActivity.this,

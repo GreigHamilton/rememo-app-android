@@ -17,6 +17,12 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.support.v4.app.NavUtils;
 
+/**
+ * Class for Incomplete Events activity.
+ * 
+ * @author Greig Hamilton
+ *
+ */
 public class IncompleteActivity extends Activity {
 	
 	private DatabaseHelper db;
@@ -59,6 +65,11 @@ public class IncompleteActivity extends Activity {
 
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+			
+		case R.id.menu_about:
+            i = new Intent(IncompleteActivity.this, AboutActivity.class);
+            startActivity(i);
+            break;
 
 		case R.id.action_settings:
 			i = new Intent(IncompleteActivity.this, SettingsActivity.class);

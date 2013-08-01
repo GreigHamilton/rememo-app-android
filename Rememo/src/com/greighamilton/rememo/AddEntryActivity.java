@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -58,6 +60,9 @@ public class AddEntryActivity extends Activity {
     private EditText remindTime;
     
     private CheckBox remindMeBefore;
+    private CheckBox remindMeNever;
+    
+    private CheckBox optionalItems;
     
     private boolean edit = false;
 
@@ -90,21 +95,56 @@ public class AddEntryActivity extends Activity {
         
         remindTime = (EditText) findViewById(R.id.remind_before_time);
         
+        // remind me before checkbox
         remindMeBefore = (CheckBox) findViewById(R.id.remind_me_check);
         
-        remindMeBefore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        // get all other widgets required
+        final TextView remindOptionsTextOne = (TextView) findViewById(R.id.remind_options_text_1);
+        final TextView remindOptionsTextTwo = (TextView) findViewById(R.id.remind_options_text_2);
+        
+        // get the checkbox for wanting no reminder set
+        remindMeNever = (CheckBox) findViewById(R.id.remind_me_never);
+        
+        // set an on checked change listener
+        remindMeNever.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
         	   @Override
         	   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         		   if (isChecked) {
-        			   remindMeBefore.setText(" also remind me at " + hour + ":" + minute
-        					   + " on " + day + "-" + month + "-" + year + ". ");
+        			   // make other reminder options unclickable (REMINDER OPTIONS SECTION)
+        			   remindOptionsTextOne.setEnabled(false);
+        			   remindOptionsTextTwo.setEnabled(false);
+        			   remindTime.setEnabled(false);
+        			   remindPeriod.setEnabled(false);
+        			   remindMeBefore.setEnabled(false);
         		   }
         		   else {
-        			   remindMeBefore.setText(" check to also remind me at time of event. ");
+        			// make other reminder options clickable (REMINDER OPTIONS SECTION)
+        			   remindOptionsTextOne.setEnabled(true);
+        			   remindOptionsTextTwo.setEnabled(true);
+        			   remindTime.setEnabled(true);
+        			   remindPeriod.setEnabled(true);
+        			   remindMeBefore.setEnabled(true);
         		   }
         	   }
         	});
+        
+        // reminder me before on checked change listener
+        remindMeBefore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+     	   @Override
+     	   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+     		   if (isChecked) {
+     			   remindMeBefore.setText(" also remind me at " + hour + ":" + minute
+     					   + " on " + day + "-" + month + "-" + year + ". ");
+     			  remindMeNever.setEnabled(false);
+     		   }
+     		   else {
+     			  remindMeBefore.setText(" check to also remind me at time of event. ");
+     			  remindMeNever.setEnabled(true);
+     		   }
+     	   }
+     	});
        
         TextView circled = (TextView) findViewById(R.id.entry_circled_text);
         // check if device is 4.0- or 4.0+
@@ -119,6 +159,50 @@ public class AddEntryActivity extends Activity {
         
     	TextView underlined = (TextView) findViewById(R.id.entry_underlined_text);
         underlined.setPaintFlags(underlined.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        
+        // get all optional widgets and hide them until checkbox is clicked
+        final TextView highlightingHeading = (TextView)  findViewById(R.id.highlighting_heading);
+        final LinearLayout optionalOne = (LinearLayout) findViewById(R.id.optional_1);
+        final LinearLayout optionalTwo = (LinearLayout) findViewById(R.id.optional_2);
+        final LinearLayout optionalThree = (LinearLayout) findViewById(R.id.optional_3);
+        final TextView optionsHeading = (TextView) findViewById(R.id.options_heading);
+        final RadioGroup entryRadioGroup = (RadioGroup) findViewById(R.id.entry_radiogroup);
+
+		highlightingHeading.setVisibility(View.GONE);
+		optionalOne.setVisibility(View.GONE);
+		optionalTwo.setVisibility(View.GONE);
+		optionalThree.setVisibility(View.GONE);
+		optionsHeading.setVisibility(View.GONE);
+		entryRadioGroup.setVisibility(View.GONE);
+        
+        // get optional items checkbox
+        CheckBox optionalItems = (CheckBox) findViewById(R.id.show_optional_items);
+        optionalItems.setChecked(true);
+        
+		optionalItems.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (!isChecked) {
+							// show optional widgets
+							highlightingHeading.setVisibility(View.VISIBLE);
+							optionalOne.setVisibility(View.VISIBLE);
+							optionalTwo.setVisibility(View.VISIBLE);
+							optionalThree.setVisibility(View.VISIBLE);
+							optionsHeading.setVisibility(View.VISIBLE);
+							entryRadioGroup.setVisibility(View.VISIBLE);
+						} else {
+							// hide optional widgets
+							highlightingHeading.setVisibility(View.GONE);
+							optionalOne.setVisibility(View.GONE);
+							optionalTwo.setVisibility(View.GONE);
+							optionalThree.setVisibility(View.GONE);
+							optionsHeading.setVisibility(View.GONE);
+							entryRadioGroup.setVisibility(View.GONE);
+						}
+					}
+				});
     }
 
     @Override
@@ -298,108 +382,6 @@ public class AddEntryActivity extends Activity {
 				        options = 2;
 				    }
 				}
-
-				int nextId = db.nextEventID();
-				
-				if (remindMeBefore.isChecked() || remindTime.getText().toString().equals("")) {
-					// ------------------------------------
-					// add alarm for event
-
-					// ---use the AlarmManager to trigger an alarm---
-					alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-					// ---get current date and time---
-					Calendar calendar = Calendar.getInstance();
-
-					// ---sets the time for the alarm to trigger---
-					calendar.set(Calendar.YEAR, year);
-					calendar.set(Calendar.MONTH, month - 1); // seems to be 1 off
-					calendar.set(Calendar.DAY_OF_MONTH, day);
-					calendar.set(Calendar.HOUR_OF_DAY, hour);
-					calendar.set(Calendar.MINUTE, minute);
-					calendar.set(Calendar.SECOND, 0);
-					
-					String dateTimeText = year + "-";
-					if (month < 10)
-						dateTimeText += "0" + month + "-";
-					else
-						dateTimeText += month + "-";
-					if (day < 10)
-						dateTimeText += "0" + day;
-					else
-						dateTimeText += day;
-					dateTimeText += " ";
-					if (hour < 10)
-						dateTimeText += "0" + hour;
-					else
-						dateTimeText += hour;
-					dateTimeText += ":";
-					if (minute < 10)
-						dateTimeText += "0" + minute;
-					else
-						dateTimeText += minute;
-					dateTimeText += ":00.000";
-
-					// ---PendingIntent to launch activity when the alarm
-					// triggers---
-					Intent i = new Intent(
-							"com.greighamilton.rememo.reminders.DisplayNotification");
-
-					// ---assign an ID of 1---
-					i.putExtra("EventId", nextId);
-					i.putExtra("EventName", name);
-					i.putExtra("EventDate", dateTimeText);
-					i.putExtra("EventCircled", circled);
-					i.putExtra("EventUnderlined", underlined);
-					i.putExtra("EventStarred", starred);
-					i.putExtra("EventNotes", notes);
-
-					PendingIntent notificationIntent = PendingIntent.getActivity(
-							getBaseContext(), nextId, i, 0);
-
-					// ---sets the alarm to trigger---
-					alarmManager.set(AlarmManager.RTC_WAKEUP,
-							calendar.getTimeInMillis(), notificationIntent);
-
-					// ---PendingIntent to launch activity when the alarm triggers-
-					Intent j = new Intent(
-							"com.greighamilton.rememo.ReminderActivity");
-					j.putExtra("EventName", name);
-					j.putExtra("EventDate", dateTimeText);
-					j.putExtra("EventId", nextId);
-					j.putExtra("EventCircled", circled);
-					j.putExtra("EventUnderlined", underlined);
-					j.putExtra("EventStarred", starred);
-					j.putExtra("EventNotes", notes);
-					
-					PendingIntent alarmIntent = PendingIntent.getActivity(
-							getBaseContext(), nextId, j, 0);
-
-					// ---sets the alarm to trigger---
-					alarmManager.set(AlarmManager.RTC_WAKEUP,
-							calendar.getTimeInMillis(), alarmIntent);
-
-					// ----------------------------------
-				}
-				
-				int repTime;
-				if (remindTime.getText().toString().equals(""))
-					repTime = 0;
-				else
-					repTime = Integer.parseInt(remindTime.getText().toString());
-				
-				// ---get current date and time---
-				Calendar calendar = Calendar.getInstance();
-
-				// ---sets the time for the alarm to trigger---
-				calendar.set(Calendar.YEAR, year);
-				calendar.set(Calendar.MONTH, month - 1); // seems to be 1 off
-				calendar.set(Calendar.DAY_OF_MONTH, day);
-				calendar.set(Calendar.HOUR_OF_DAY, hour);
-				calendar.set(Calendar.MINUTE, minute);
-				calendar.set(Calendar.SECOND, 0);
-				
-				calendar.add(Calendar.MINUTE, -repTime);
 				
 				String dateTimeText = year + "-";
 				if (month < 10)
@@ -421,233 +403,273 @@ public class AddEntryActivity extends Activity {
 				else
 					dateTimeText += minute;
 				dateTimeText += ":00.000";
+
+				int nextId = db.nextEventID();
 				
-				// check if another reminder is to be created for before the event
-				if (!remindTime.getText().toString().matches("")) {
-					
-					
-					int repPeriod = remindPeriod.getSelectedItemPosition();
-					
-					if (repPeriod == 0) {
-						// set reminder repTime minutes before event
-						// add alarm for event
-
-						// ---use the AlarmManager to trigger an alarm---
-						alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
+				if (!remindMeNever.isChecked()) {
+					if (remindMeBefore.isChecked() || remindTime.getText().toString().equals("")) {
 						
-
-						// ---PendingIntent to launch activity when the alarm
-						// triggers---
-						Intent i1 = new Intent(
-								"com.greighamilton.rememo.reminders.DisplayNotification");
-
-						// ---assign an ID of 1---
-						i1.putExtra("EventId", nextId);
-						i1.putExtra("EventName", name);
-						i1.putExtra("EventDate", dateTimeText);
-						i1.putExtra("EventCircled", circled);
-						i1.putExtra("EventUnderlined", underlined);
-						i1.putExtra("EventStarred", starred);
-						i1.putExtra("EventNotes", notes);
-
-						PendingIntent notificationIntent1 = PendingIntent.getActivity(
-								getBaseContext(), nextId, i1, 0);
-
-						// ---sets the alarm to trigger---
-						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								calendar.getTimeInMillis(), notificationIntent1);
-
-						// ---PendingIntent to launch activity when the alarm triggers-
-						Intent j1 = new Intent(
-								"com.greighamilton.rememo.ReminderActivity");
-						j1.putExtra("EventName", name);
-						j1.putExtra("EventDate", dateTimeText);
-						j1.putExtra("EventId", nextId);
-						j1.putExtra("EventCircled", circled);
-						j1.putExtra("EventUnderlined", underlined);
-						j1.putExtra("EventStarred", starred);
-						j1.putExtra("EventNotes", notes);
+						Log.i("HERE2", "2");
 						
-						PendingIntent alarmIntent1 = PendingIntent.getActivity(
-								getBaseContext(), nextId, j1, 0);
-
-						// ---sets the alarm to trigger---
-						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								calendar.getTimeInMillis(), alarmIntent1);
-
-						// ----------------------------------
-					}
-					else if (repPeriod == 1) {
-						// set reminder repTime hours before event
+						// ------------------------------------
 						// add alarm for event
 
 						// ---use the AlarmManager to trigger an alarm---
 						alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
 						// ---get current date and time---
-						Calendar calendar11 = Calendar.getInstance();
+						Calendar calendar = Calendar.getInstance();
 
 						// ---sets the time for the alarm to trigger---
-						calendar11.set(Calendar.YEAR, year);
-						calendar11.set(Calendar.MONTH, month - 1); // seems to be 1 off
-						calendar11.set(Calendar.DAY_OF_MONTH, day);
-						calendar11.set(Calendar.HOUR_OF_DAY, hour);
-						calendar11.set(Calendar.MINUTE, minute);
-						calendar11.set(Calendar.SECOND, 0);
-						
-						calendar11.add(Calendar.HOUR_OF_DAY, -repTime);
-						
-						String dateTimeText11 = year + "-";
-						if (month < 10)
-							dateTimeText11 += "0" + month + "-";
-						else
-							dateTimeText11 += month + "-";
-						if (day < 10)
-							dateTimeText11 += "0" + day;
-						else
-							dateTimeText11 += day;
-						dateTimeText11 += " ";
-						if (hour < 10)
-							dateTimeText11 += "0" + hour;
-						else
-							dateTimeText11 += hour;
-						dateTimeText11 += ":";
-						if (minute < 10)
-							dateTimeText11 += "0" + minute;
-						else
-							dateTimeText11 += minute;
-						dateTimeText11 += ":00.000";
+						calendar.set(Calendar.YEAR, year);
+						calendar.set(Calendar.MONTH, month - 1); // seems to be 1 off
+						calendar.set(Calendar.DAY_OF_MONTH, day);
+						calendar.set(Calendar.HOUR_OF_DAY, hour);
+						calendar.set(Calendar.MINUTE, minute);
+						calendar.set(Calendar.SECOND, 0);
 
 						// ---PendingIntent to launch activity when the alarm
 						// triggers---
-						Intent i1 = new Intent(
+						Intent i = new Intent(
 								"com.greighamilton.rememo.reminders.DisplayNotification");
 
 						// ---assign an ID of 1---
-						i1.putExtra("EventId", nextId);
-						i1.putExtra("EventName", name);
-						i1.putExtra("EventDate", dateTimeText11);
-						i1.putExtra("EventCircled", circled);
-						i1.putExtra("EventUnderlined", underlined);
-						i1.putExtra("EventStarred", starred);
-						i1.putExtra("EventNotes", notes);
+						i.putExtra("EventId", nextId);
+						i.putExtra("EventName", name);
+						i.putExtra("EventDate", dateTimeText);
+						i.putExtra("EventCircled", circled);
+						i.putExtra("EventUnderlined", underlined);
+						i.putExtra("EventStarred", starred);
+						i.putExtra("EventNotes", notes);
 
-						PendingIntent notificationIntent1 = PendingIntent.getActivity(
-								getBaseContext(), nextId, i1, 0);
+						PendingIntent notificationIntent = PendingIntent.getActivity(
+								getBaseContext(), nextId, i, 0);
 
 						// ---sets the alarm to trigger---
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								calendar11.getTimeInMillis(), notificationIntent1);
+								calendar.getTimeInMillis(), notificationIntent);
 
 						// ---PendingIntent to launch activity when the alarm triggers-
-						Intent j1 = new Intent(
+						Intent j = new Intent(
 								"com.greighamilton.rememo.ReminderActivity");
-						j1.putExtra("EventName", name);
-						j1.putExtra("EventDate", dateTimeText11);
-						j1.putExtra("EventId", nextId);
-						j1.putExtra("EventCircled", circled);
-						j1.putExtra("EventUnderlined", underlined);
-						j1.putExtra("EventStarred", starred);
-						j1.putExtra("EventNotes", notes);
+						j.putExtra("EventName", name);
+						j.putExtra("EventDate", dateTimeText);
+						j.putExtra("EventId", nextId);
+						j.putExtra("EventCircled", circled);
+						j.putExtra("EventUnderlined", underlined);
+						j.putExtra("EventStarred", starred);
+						j.putExtra("EventNotes", notes);
 						
-						PendingIntent alarmIntent1 = PendingIntent.getActivity(
-								getBaseContext(), nextId, j1, 0);
+						PendingIntent alarmIntent = PendingIntent.getActivity(
+								getBaseContext(), nextId, j, 0);
 
 						// ---sets the alarm to trigger---
 						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								calendar11.getTimeInMillis(), alarmIntent1);
+								calendar.getTimeInMillis(), alarmIntent);
 
 						// ----------------------------------
 					}
-					else {
-						// set reminder repTime days before event
-						// add alarm for event
+					
+					int repTime;
+					if (remindTime.getText().toString().equals(""))
+						repTime = 0;
+					else
+						repTime = Integer.parseInt(remindTime.getText().toString());
+					
+					// ---get current date and time---
+					Calendar calendar = Calendar.getInstance();
 
-						// ---use the AlarmManager to trigger an alarm---
-						alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-						// ---get current date and time---
-						Calendar calendar11 = Calendar.getInstance();
-
-						// ---sets the time for the alarm to trigger---
-						calendar11.set(Calendar.YEAR, year);
-						calendar11.set(Calendar.MONTH, month - 1); // seems to be 1 off
-						calendar11.set(Calendar.DAY_OF_MONTH, day);
-						calendar11.set(Calendar.HOUR_OF_DAY, hour);
-						calendar11.set(Calendar.MINUTE, minute);
-						calendar11.set(Calendar.SECOND, 0);
+					// ---sets the time for the alarm to trigger---
+					calendar.set(Calendar.YEAR, year);
+					calendar.set(Calendar.MONTH, month - 1); // seems to be 1 off
+					calendar.set(Calendar.DAY_OF_MONTH, day);
+					calendar.set(Calendar.HOUR_OF_DAY, hour);
+					calendar.set(Calendar.MINUTE, minute);
+					calendar.set(Calendar.SECOND, 0);
+					
+					calendar.add(Calendar.MINUTE, -repTime);
+					
+					// check if another reminder is to be created for before the event
+					if (!remindMeNever.isChecked() && !remindTime.getText().toString().matches("")) {
 						
-						calendar11.add(Calendar.DAY_OF_MONTH, -repTime);
+						Log.i("HERE1", "1");
 						
-						String dateTimeText11 = year + "-";
-						if (month < 10)
-							dateTimeText11 += "0" + month + "-";
-						else
-							dateTimeText11 += month + "-";
-						if (day < 10)
-							dateTimeText11 += "0" + day;
-						else
-							dateTimeText11 += day;
-						dateTimeText11 += " ";
-						if (hour < 10)
-							dateTimeText11 += "0" + hour;
-						else
-							dateTimeText11 += hour;
-						dateTimeText11 += ":";
-						if (minute < 10)
-							dateTimeText11 += "0" + minute;
-						else
-							dateTimeText11 += minute;
-						dateTimeText11 += ":00.000";
-
-						// ---PendingIntent to launch activity when the alarm
-						// triggers---
-						Intent i1 = new Intent(
-								"com.greighamilton.rememo.reminders.DisplayNotification");
-
-						// ---assign an ID of 1---
-						i1.putExtra("EventId", nextId);
-						i1.putExtra("EventName", name);
-						i1.putExtra("EventDate", dateTimeText11);
-						i1.putExtra("EventCircled", circled);
-						i1.putExtra("EventUnderlined", underlined);
-						i1.putExtra("EventStarred", starred);
-						i1.putExtra("EventNotes", notes);
-
-						PendingIntent notificationIntent1 = PendingIntent.getActivity(
-								getBaseContext(), nextId, i1, 0);
-
-						// ---sets the alarm to trigger---
-						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								calendar11.getTimeInMillis(), notificationIntent1);
-
-						// ---PendingIntent to launch activity when the alarm triggers-
-						Intent j1 = new Intent(
-								"com.greighamilton.rememo.ReminderActivity");
-						j1.putExtra("EventName", name);
-						j1.putExtra("EventDate", dateTimeText11);
-						j1.putExtra("EventId", nextId);
-						j1.putExtra("EventCircled", circled);
-						j1.putExtra("EventUnderlined", underlined);
-						j1.putExtra("EventStarred", starred);
-						j1.putExtra("EventNotes", notes);
+						int repPeriod = remindPeriod.getSelectedItemPosition();
 						
-						PendingIntent alarmIntent1 = PendingIntent.getActivity(
-								getBaseContext(), nextId, j1, 0);
+						if (repPeriod == 0) {
+							// set reminder repTime minutes before event
+							// add alarm for event
 
-						// ---sets the alarm to trigger---
-						alarmManager.set(AlarmManager.RTC_WAKEUP,
-								calendar11.getTimeInMillis(), alarmIntent1);
+							// ---use the AlarmManager to trigger an alarm---
+							alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-						// ----------------------------------
+							
+
+							// ---PendingIntent to launch activity when the alarm
+							// triggers---
+							Intent i1 = new Intent(
+									"com.greighamilton.rememo.reminders.DisplayNotification");
+
+							// ---assign an ID of 1---
+							i1.putExtra("EventId", nextId);
+							i1.putExtra("EventName", name);
+							i1.putExtra("EventDate", dateTimeText);
+							i1.putExtra("EventCircled", circled);
+							i1.putExtra("EventUnderlined", underlined);
+							i1.putExtra("EventStarred", starred);
+							i1.putExtra("EventNotes", notes);
+
+							PendingIntent notificationIntent1 = PendingIntent.getActivity(
+									getBaseContext(), nextId, i1, 0);
+
+							// ---sets the alarm to trigger---
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									calendar.getTimeInMillis(), notificationIntent1);
+
+							// ---PendingIntent to launch activity when the alarm triggers-
+							Intent j1 = new Intent(
+									"com.greighamilton.rememo.ReminderActivity");
+							j1.putExtra("EventName", name);
+							j1.putExtra("EventDate", dateTimeText);
+							j1.putExtra("EventId", nextId);
+							j1.putExtra("EventCircled", circled);
+							j1.putExtra("EventUnderlined", underlined);
+							j1.putExtra("EventStarred", starred);
+							j1.putExtra("EventNotes", notes);
+							
+							PendingIntent alarmIntent1 = PendingIntent.getActivity(
+									getBaseContext(), nextId, j1, 0);
+
+							// ---sets the alarm to trigger---
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									calendar.getTimeInMillis(), alarmIntent1);
+
+							// ----------------------------------
+						}
+						else if (repPeriod == 1) {
+							// set reminder repTime hours before event
+							// add alarm for event
+
+							// ---use the AlarmManager to trigger an alarm---
+							alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+							// ---get current date and time---
+							Calendar calendar11 = Calendar.getInstance();
+
+							// ---sets the time for the alarm to trigger---
+							calendar11.set(Calendar.YEAR, year);
+							calendar11.set(Calendar.MONTH, month - 1); // seems to be 1 off
+							calendar11.set(Calendar.DAY_OF_MONTH, day);
+							calendar11.set(Calendar.HOUR_OF_DAY, hour);
+							calendar11.set(Calendar.MINUTE, minute);
+							calendar11.set(Calendar.SECOND, 0);
+							
+							calendar11.add(Calendar.HOUR_OF_DAY, -repTime);
+
+							// ---PendingIntent to launch activity when the alarm
+							// triggers---
+							Intent i1 = new Intent(
+									"com.greighamilton.rememo.reminders.DisplayNotification");
+
+							// ---assign an ID of 1---
+							i1.putExtra("EventId", nextId);
+							i1.putExtra("EventName", name);
+							i1.putExtra("EventDate", dateTimeText);
+							i1.putExtra("EventCircled", circled);
+							i1.putExtra("EventUnderlined", underlined);
+							i1.putExtra("EventStarred", starred);
+							i1.putExtra("EventNotes", notes);
+
+							PendingIntent notificationIntent1 = PendingIntent.getActivity(
+									getBaseContext(), nextId, i1, 0);
+
+							// ---sets the alarm to trigger---
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									calendar11.getTimeInMillis(), notificationIntent1);
+
+							// ---PendingIntent to launch activity when the alarm triggers-
+							Intent j1 = new Intent(
+									"com.greighamilton.rememo.ReminderActivity");
+							j1.putExtra("EventName", name);
+							j1.putExtra("EventDate", dateTimeText);
+							j1.putExtra("EventId", nextId);
+							j1.putExtra("EventCircled", circled);
+							j1.putExtra("EventUnderlined", underlined);
+							j1.putExtra("EventStarred", starred);
+							j1.putExtra("EventNotes", notes);
+							
+							PendingIntent alarmIntent1 = PendingIntent.getActivity(
+									getBaseContext(), nextId, j1, 0);
+
+							// ---sets the alarm to trigger---
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									calendar11.getTimeInMillis(), alarmIntent1);
+
+							// ----------------------------------
+						}
+						else {
+							// set reminder repTime days before event
+							// add alarm for event
+
+							// ---use the AlarmManager to trigger an alarm---
+							alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+							// ---get current date and time---
+							Calendar calendar11 = Calendar.getInstance();
+
+							// ---sets the time for the alarm to trigger---
+							calendar11.set(Calendar.YEAR, year);
+							calendar11.set(Calendar.MONTH, month - 1); // seems to be 1 off
+							calendar11.set(Calendar.DAY_OF_MONTH, day);
+							calendar11.set(Calendar.HOUR_OF_DAY, hour);
+							calendar11.set(Calendar.MINUTE, minute);
+							calendar11.set(Calendar.SECOND, 0);
+							
+							calendar11.add(Calendar.DAY_OF_MONTH, -repTime);
+
+							// ---PendingIntent to launch activity when the alarm
+							// triggers---
+							Intent i1 = new Intent(
+									"com.greighamilton.rememo.reminders.DisplayNotification");
+
+							// ---assign an ID of 1---
+							i1.putExtra("EventId", nextId);
+							i1.putExtra("EventName", name);
+							i1.putExtra("EventDate", dateTimeText);
+							i1.putExtra("EventCircled", circled);
+							i1.putExtra("EventUnderlined", underlined);
+							i1.putExtra("EventStarred", starred);
+							i1.putExtra("EventNotes", notes);
+
+							PendingIntent notificationIntent1 = PendingIntent.getActivity(
+									getBaseContext(), nextId, i1, 0);
+
+							// ---sets the alarm to trigger---
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									calendar11.getTimeInMillis(), notificationIntent1);
+
+							// ---PendingIntent to launch activity when the alarm triggers-
+							Intent j1 = new Intent(
+									"com.greighamilton.rememo.ReminderActivity");
+							j1.putExtra("EventName", name);
+							j1.putExtra("EventDate", dateTimeText);
+							j1.putExtra("EventId", nextId);
+							j1.putExtra("EventCircled", circled);
+							j1.putExtra("EventUnderlined", underlined);
+							j1.putExtra("EventStarred", starred);
+							j1.putExtra("EventNotes", notes);
+							
+							PendingIntent alarmIntent1 = PendingIntent.getActivity(
+									getBaseContext(), nextId, j1, 0);
+
+							// ---sets the alarm to trigger---
+							alarmManager.set(AlarmManager.RTC_WAKEUP,
+									calendar11.getTimeInMillis(), alarmIntent1);
+
+							// ----------------------------------
+						}
 					}
 				}
-				
-				
-				
-				
-				
 
 				if (edit) {
 					// remove the original reminder and notification
@@ -781,6 +803,7 @@ public class AddEntryActivity extends Activity {
      * @param minute	minute selected by user
      */
     public void populateSetTime(int hour, int minute) {
+    	
         // Add selected time text to button
         Button button = (Button) findViewById(R.id.entry_time);
         String hhh;
