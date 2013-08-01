@@ -15,6 +15,12 @@ import android.widget.ListView;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
 
+/**
+ * Class for Search Results activity.
+ * 
+ * @author Greig Hamilton
+ *
+ */
 public class SearchResultsActivity extends Activity {
 	
 	private DatabaseHelper db;

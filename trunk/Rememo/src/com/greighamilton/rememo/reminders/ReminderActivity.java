@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
@@ -73,13 +74,24 @@ public class ReminderActivity extends Activity {
 	
 	private MediaPlayer mp;
 	
+	private Handler mHandler;
+	
 	private int eventOptions;
+	
+	private boolean reminderNotClicked;
+	
+	private int soundRepPeriod;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // set that reminder hasnt been clicked yet
+        reminderNotClicked = true;
+        
+        // set the view
         setContentView(R.layout.activity_reminder);
         
+        // get shared preferences
         sp = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());	
         colourString = sp.getString("COLOUR", "");
         
@@ -87,7 +99,14 @@ public class ReminderActivity extends Activity {
         
         db = DatabaseHelper.getInstance(this);
         
+        // set visibility of widgets
         tapMeText = (TextView) findViewById(R.id.reminder_taphere);
+        try {
+        	tapMeText.setTextColor(Color.parseColor(textColourString));
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	tapMeText.setTextColor(Color.BLACK);
+        }
         tapMeText.setVisibility(View.VISIBLE);
         
         reminderText = (TextView) findViewById(R.id.reminder_text);
@@ -143,54 +162,128 @@ public class ReminderActivity extends Activity {
     	reminderText.setVisibility(View.GONE);
     	
     	// start music and vibration TODO
-    	int resource = sp.getInt("MUSIC", 0); // set default
-    	int resourceTime = sp.getInt("MUSIC_TIME", 10);
+    	final int resource = sp.getInt("MUSIC", 0); // set default
+    	final int resourceTime = sp.getInt("MUSIC_TIME", 10);
+    	
+    	soundRepPeriod = sp.getInt("MUSIC_REP", 0);
+    	
+    	mHandler = new Handler();
     	
     	// check if music is to be played
     	if (resource != 0) {
-    		mp = MediaPlayer.create(this, resource);
-        	
-        	try {
-    			mp.prepare();
-    		} catch (IllegalStateException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    		
+    		// if repetition is set
+    		if (soundRepPeriod != 0) {
+    			// create a new thread for the audio in reminder
+            	new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    	
+                        while (reminderNotClicked) {
+                        	
+                        	mp = MediaPlayer.create(getApplicationContext(), resource);
+                        	
+                        	try {
+                    			mp.prepare();
+                    		} catch (IllegalStateException e) {
+                    			// TODO Auto-generated catch block
+                    			e.printStackTrace();
+                    		} catch (IOException e) {
+                    			// TODO Auto-generated catch block
+                    			e.printStackTrace();
+                    		}
+                        	
+                        	// start the audio stream
+                        	mp.start();
+                        	
+                        	// timer task to enable customisable timing of audio
+                            TimerTask task = new TimerTask() {
+
+                                @Override
+                                public void run() {
+                                	
+                                    // stop the timer after a set period of time
+                                    mp.stop();
+                                }
+                            };
+                            
+                            Timer t = new Timer();
+                            
+                            // check if the audio is an earcon, if so then set schedule time to 1 sec default.
+                            if (resource == R.raw.earcon1 || resource == R.raw.earcon2 || resource == R.raw.earcon3 || resource == R.raw.earcon4 || resource == R.raw.earcon5) {
+                                t.schedule(task, 1000);
+                            }
+                            else {
+                            	
+                            	// set time (second parameter) for the reminder
+                                t.schedule(task, resourceTime*1000);
+                            }
+                        	
+                            try {
+                            	// set the time for it to repeat for each case (original time + interval)
+                            	if (soundRepPeriod == 1) Thread.sleep((resourceTime*1000) + 30000); // 30 secs
+                            	else if (soundRepPeriod == 2) Thread.sleep((resourceTime*1000) + 60000); // 1 min
+                            	else if (soundRepPeriod == 3) Thread.sleep((resourceTime*1000) + 300000); // 5 min
+                            	else if (soundRepPeriod == 4) Thread.sleep((resourceTime*1000) + 600000); // 10 min
+                                
+                                mHandler.post(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                    	
+                                    	// TODO
+                                    }
+                                });
+                            } catch (Exception e) {
+                                // TODO: handle exception
+                            }
+                        }
+                    }
+                }).start();
     		}
-        	
-        	// start the audio stream
-            mp.start();
-            
-            // timer task to enable customisable timing of audio
-            TimerTask task = new TimerTask() {
-
-                @Override
-                public void run() 
-                {
-                    // stop the timer after a set period of time
-                    mp.stop();
-
-                }
-            };
-            
-            Timer t = new Timer();
-            
-            // check if the audio is an earcon, if so then set schedule time to 1 sec default.
-            if (resource == R.raw.earcon1 || resource == R.raw.earcon2 || resource == R.raw.earcon3 || resource == R.raw.earcon4 || resource == R.raw.earcon5) {
-                t.schedule(task, 1000);
-            }
-            else {
+    		
+    		// no repetition wanted
+    		else {
+    			
+    			mp = MediaPlayer.create(getApplicationContext(), resource);
             	
-            	// set time (second parameter) for the reminder
-                t.schedule(task, resourceTime*1000);
-            }
-            
-            
-            
-            
-            
+            	try {
+        			mp.prepare();
+        		} catch (IllegalStateException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		} catch (IOException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+            	
+    			// start the audio stream
+            	mp.start();
+            	
+            	// timer task to enable customisable timing of audio
+                TimerTask task = new TimerTask() {
+
+                    @Override
+                    public void run() {
+                    	
+                        // stop the timer after a set period of time
+                        mp.stop();
+                    }
+                };
+                
+                Timer t = new Timer();
+                
+                // check if the audio is an earcon, if so then set schedule time to 1 sec default.
+                if (resource == R.raw.earcon1 || resource == R.raw.earcon2 || resource == R.raw.earcon3 || resource == R.raw.earcon4 || resource == R.raw.earcon5) {
+                    t.schedule(task, 1000);
+                }
+                else {
+                	
+                	// set time (second parameter) for the reminder
+                    t.schedule(task, resourceTime*1000);
+                }
+    		}
+    		
     	}
     }
     
@@ -201,6 +294,9 @@ public class ReminderActivity extends Activity {
      * @param v		View
      */
     public void clickReminderScreen(View v) {
+    	
+    	reminderNotClicked = false;
+    	
     	changeButton.setVisibility(View.VISIBLE);
      	
     	doneButton.setVisibility(View.VISIBLE);
@@ -526,6 +622,19 @@ public class ReminderActivity extends Activity {
 						        	reminderBackground.setBackgroundColor(Color.GRAY);
 						        }
 							}
+							
+							if (colours[item].equals("Pink")) {
+								
+								sp.edit().putString("COLOUR", "#EB1CAD").commit();
+								
+								try {
+						        	reminderBackground.setBackgroundColor(Color.parseColor("#EB1CAD"));
+						        } catch (Exception e) {
+						        	e.printStackTrace();
+						        	reminderBackground.setBackgroundColor(Color.GRAY);
+						        }
+							}
+
 							if (colours[item].equals("Green")) {
 								
 								sp.edit().putString("COLOUR", "#3ECF4F").commit();

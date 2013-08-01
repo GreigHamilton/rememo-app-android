@@ -1,5 +1,7 @@
 package com.greighamilton.rememo.dialogs;
 
+import com.greighamilton.rememo.R;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,8 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
-import com.greighamilton.rememo.R;
 
 /**
  * Class for a ColourDialogPreference object.
@@ -40,6 +40,7 @@ public class ColourDialogPreference extends DialogPreference {
     protected void onBindDialogView(View view) {
     	
     	RadioButton red = (RadioButton) view.findViewById(R.id.colour_red);
+    	RadioButton pink = (RadioButton) view.findViewById(R.id.colour_pink);
     	RadioButton orange = (RadioButton) view.findViewById(R.id.colour_orange);
     	RadioButton yellow = (RadioButton) view.findViewById(R.id.colour_yellow);
     	RadioButton green = (RadioButton) view.findViewById(R.id.colour_green);
@@ -50,6 +51,9 @@ public class ColourDialogPreference extends DialogPreference {
     	Log.i("current colour", currentColour);
     	if (currentColour == "#F21818")
     		radioGroup.check(red.getId());
+    	
+    	else if (currentColour == "#EB1CAD")
+    		radioGroup.check(pink.getId());
     	
     	else if (currentColour == "#FFAB19")
     		radioGroup.check(orange.getId());
@@ -76,6 +80,9 @@ public class ColourDialogPreference extends DialogPreference {
         	// find which colour was selected and add to shared preferences
         	RadioButton red = (RadioButton)((AlertDialog) dialog).findViewById(R.id.colour_red);
         	if (red.isChecked()) sp.edit().putString("COLOUR", "#F21818").commit();
+        	
+        	RadioButton pink = (RadioButton)((AlertDialog) dialog).findViewById(R.id.colour_pink);
+        	if (pink.isChecked()) sp.edit().putString("COLOUR", "#EB1CAD").commit();
         	
         	RadioButton orange = (RadioButton)((AlertDialog) dialog).findViewById(R.id.colour_orange);
         	if (orange.isChecked()) sp.edit().putString("COLOUR", "#FFAB19").commit();

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -139,119 +140,112 @@ public class MainActivity extends Activity {
         // get all the event sin the database for the selected week
         Cursor allEventsCursor = db.getEventsByDate(selectedWeekStartDate, selectedWeekEndDate, true);
         allEventsCursor.moveToFirst();
-        
-        
-        // if there is nothing in the db, show a splash screen to welcome the user
-        if (db.isDatabaseEmpty()) setContentView(R.layout.activity_main_welcome);
-        
-		else {
 			
-			// start at first date
-			String currentCursorDate = selectedWeekStartDate;
-			
-			// for each date between start and end
-			while (!currentCursorDate.equals(selectedWeekEndDate)) {
-				
-				// inflate layout for the day
-				LinearLayout widget = (LinearLayout) getLayoutInflater().inflate(R.layout.diary_widget, null);
-				
-				// add blue border for today
-				if (currentCursorDate.equals(Util.getTodaysDate())) {
-					widget.setBackgroundDrawable(getResources().getDrawable(
-							R.drawable.diary_border_today));
-				}
-				else
-					widget.setBackgroundDrawable(getResources().getDrawable(
-							R.drawable.diary_border));
+        // start at first date
+        String currentCursorDate = selectedWeekStartDate;
 
-				// identify subwidgets
-				TextView day = (TextView) widget.findViewById(R.id.day_text);
-				TextView date = (TextView) widget.findViewById(R.id.main_date_text);
-				LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container);
+        // for each date between start and end
+        while (!currentCursorDate.equals(selectedWeekEndDate)) {
 
-				// day
-				day.setText(" "+Util.getDayOfWeek(currentCursorDate));
-				day.setTypeface(null, Typeface.BOLD);
+        	// inflate layout for the day
+        	LinearLayout widget = (LinearLayout) getLayoutInflater().inflate(R.layout.diary_widget, null);
 
-				// date
-				date.setText("  "+currentCursorDate.substring(8, 10) + " " + Util.getMonthText(currentCursorDate) + " " + currentCursorDate.substring(0, 4));
-				date.setTypeface(null, Typeface.ITALIC);
-				
-				// events
-		        Cursor eventsCursor = db.getEventsByDate(currentCursorDate, Util.getTomorrowsDate(currentCursorDate), true);
-		        eventsCursor.moveToFirst();
-		        
-		        
-		        // loop through all the events from the db (via cursor) until there are no more
-		        while (!eventsCursor.isAfterLast()) {
-		        	
-		        	// create a new line for the diary (has time, name)
-		        	LinearLayout diaryLine = new LinearLayout(this);
-		        	diaryLine.setOrientation(LinearLayout.HORIZONTAL);
-		        	
-		        	// create a new text view for the time of event
-		        	TextView eventPaddingTime = new TextView(this);
-		        	eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
-							.getString(DatabaseHelper.EVENT_DATE_TIME)
-							.substring(11, 16)) + " \t \t ");
-		        	
-		        	// create a new text view for the name of the event
-		        	TextView eventText = new TextView(this);
-		        	eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
-					
-					eventText.setPadding(35, 0, 0, 0);
-					
-					int options = eventsCursor.getInt(DatabaseHelper.EVENT_OPTIONS);
-					if (options == 1)
-						eventText.setTextColor(getResources().getColor(R.color.Green));
-					if (options == 2)
-						eventText.setTextColor(getResources().getColor(R.color.Red));
-					
-					// check if event has been done, if it has strikethrough the text
-		        	if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
-		        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-		        	}
-		        	
-		        	// check for customisation options (underline, circle, star)
-		        	// check if device is 4.0- or 4.0+
-		        	int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		        	if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH && currentapiVersion != android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
-		        		
-		        		if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
-				        		eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
-				        	}
-		        		
-		        	} else{
-		        	    // don't do anything
-		        	}
-		        	
-		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
-		        		eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-		        	}
-		        	if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
-		        		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
-		        	}
-		        	
-					
-					// add to linear layout holder
-					diaryLine.addView(eventPaddingTime);
-					diaryLine.addView(eventText);
-					
-					// add line holder to events holder
-					eventsHolder.addView(diaryLine);
-					eventsCursor.moveToNext();
-		        }
-		        
-		        // tag the widget for use later when edit / delete
-		        widget.setTag(R.id.diary_date, currentCursorDate);
-				
-				// add widget
-				widgets.add(widget);
-				
-				// increment date
-				currentCursorDate = Util.incrementDate(currentCursorDate);
-				
-			}
+        	// add blue border for today
+        	if (currentCursorDate.equals(Util.getTodaysDate())) {
+        		widget.setBackgroundDrawable(getResources().getDrawable(
+        				R.drawable.diary_border_today));
+        	}
+        	else
+        		widget.setBackgroundDrawable(getResources().getDrawable(
+        				R.drawable.diary_border));
+
+        	// identify subwidgets
+        	TextView day = (TextView) widget.findViewById(R.id.day_text);
+        	TextView date = (TextView) widget.findViewById(R.id.main_date_text);
+        	LinearLayout eventsHolder = (LinearLayout) widget.findViewById(R.id.diary_appointments_container);
+
+        	// day
+        	day.setText(" "+Util.getDayOfWeek(currentCursorDate));
+        	day.setTypeface(null, Typeface.BOLD);
+
+        	// date
+        	date.setText("  "+currentCursorDate.substring(8, 10) + " " + Util.getMonthText(currentCursorDate) + " " + currentCursorDate.substring(0, 4));
+        	date.setTypeface(null, Typeface.ITALIC);
+
+        	// events
+        	Cursor eventsCursor = db.getEventsByDate(currentCursorDate, Util.getTomorrowsDate(currentCursorDate), true);
+        	eventsCursor.moveToFirst();
+
+
+        	// loop through all the events from the db (via cursor) until there are no more
+        	while (!eventsCursor.isAfterLast()) {
+
+        		// create a new line for the diary (has time, name)
+        		LinearLayout diaryLine = new LinearLayout(this);
+        		diaryLine.setOrientation(LinearLayout.HORIZONTAL);
+
+        		// create a new text view for the time of event
+        		TextView eventPaddingTime = new TextView(this);
+        		eventPaddingTime.setText("\t \t \t \t \t \t" + (eventsCursor
+        				.getString(DatabaseHelper.EVENT_DATE_TIME)
+        				.substring(11, 16)) + " \t \t ");
+
+        		// create a new text view for the name of the event
+        		TextView eventText = new TextView(this);
+        		eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME));
+
+        		eventText.setPadding(35, 0, 0, 0);
+
+        		int options = eventsCursor.getInt(DatabaseHelper.EVENT_OPTIONS);
+        		if (options == 1)
+        			eventText.setTextColor(getResources().getColor(R.color.Green));
+        		if (options == 2)
+        			eventText.setTextColor(getResources().getColor(R.color.Red));
+
+        		// check if event has been done, if it has strikethrough the text
+        		if (db.isEventComplete(eventsCursor.getInt(DatabaseHelper.EVENT_ID))) {
+        			eventText.setPaintFlags(eventText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        			eventText.setTextColor(Color.GRAY);
+        		}
+
+        		// check for customisation options (underline, circle, star)
+        		// check if device is 4.0- or 4.0+
+        		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        		if (currentapiVersion >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH && currentapiVersion != android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+
+        			if (eventsCursor.getInt(DatabaseHelper.EVENT_CIRCLED) == 1) {
+        				eventText.setBackground(getResources().getDrawable(R.drawable.entry_circle));
+        			}
+
+        		} else{
+        			// don't do anything
+        		}
+
+        		if (eventsCursor.getInt(DatabaseHelper.EVENT_UNDERLINE) == 1) {
+        			eventText.setPaintFlags(eventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        		}
+        		if (eventsCursor.getInt(DatabaseHelper.EVENT_STARRED) == 1) {
+        			eventText.setText(eventsCursor.getString(DatabaseHelper.EVENT_NAME) + " *");
+        		}
+
+
+        		// add to linear layout holder
+        		diaryLine.addView(eventPaddingTime);
+        		diaryLine.addView(eventText);
+
+        		// add line holder to events holder
+        		eventsHolder.addView(diaryLine);
+        		eventsCursor.moveToNext();
+        	}
+
+        	// tag the widget for use later when edit / delete
+        	widget.setTag(R.id.diary_date, currentCursorDate);
+
+        	// add widget
+        	widgets.add(widget);
+
+        	// increment date
+        	currentCursorDate = Util.incrementDate(currentCursorDate);
 
 			// build the main grid view, single column, for the diary
 			GridView grid = (GridView) findViewById(R.id.grid_of_widgets);
@@ -261,9 +255,7 @@ public class MainActivity extends Activity {
 				((WidgetAdapter) grid.getAdapter()).setWidgets(widgets);
 				grid.invalidateViews();
 			}
-		}
-        
-        
+		} 
 	}
 
     @Override
@@ -299,6 +291,11 @@ public class MainActivity extends Activity {
                 i = new Intent(MainActivity.this,
                         IncompleteActivity.class);
                 MainActivity.this.startActivity(i);
+                break;
+                
+            case R.id.menu_about:
+                i = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(i);
                 break;
 
             case R.id.action_settings:

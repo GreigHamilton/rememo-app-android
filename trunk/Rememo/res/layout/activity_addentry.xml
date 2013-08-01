@@ -27,7 +27,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Name (e.g. Dentist Appointment)" >
+            android:hint="Type Event Name Here" >
 
             <requestFocus />
         </EditText>
@@ -71,6 +71,7 @@
                 android:text="Time" />
         </LinearLayout>
 
+        <!-- reminder options section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,7 +86,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/remind_options_text_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="  Remind me "
@@ -111,7 +112,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/remind_options_text_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="  before the event.              "
@@ -140,9 +141,53 @@
                 android:layout_height="wrap_content"
                 android:text="check to also remind me at time of event. " />
         </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/remind_me_never"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="check if you do not want reminded about this event. " />
+        </LinearLayout>
+       
+        <!-- Notes options section -->
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="NOTES"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue1" />
+
+        <EditText
+            android:id="@+id/entry_notes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Additional Info (Optional)"
+            android:inputType="textMultiLine" />
+
+        
+        
+        
+        
+        
+        <!-- OPTIONAL SECTIONS -->
+        <CheckBox
+                android:id="@+id/show_optional_items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SHOW OPTIONAL EVENT CUSTOMISATION"
+                android:textColor="@color/blue1" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/highlighting_heading"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingTop="20dp"
@@ -152,7 +197,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:id="@+id/optional_1" >
 
             <CheckBox
             android:id="@+id/entry_circled"
@@ -170,7 +216,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:id="@+id/optional_2" >
             
             <CheckBox
             android:id="@+id/entry_underlined"
@@ -188,7 +235,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:id="@+id/optional_3" >
             
             <CheckBox
             android:id="@+id/entry_starred"
@@ -211,7 +259,8 @@
             android:paddingTop="20dp"
             android:text="EVENT OPTIONS"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/blue1" />
+            android:textColor="@color/blue1"
+            android:id="@+id/options_heading" />
 
         <RadioGroup
             android:id="@+id/entry_radiogroup"
@@ -240,23 +289,6 @@
                 android:textColor="@color/Red" />
             
         </RadioGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="20dp"
-            android:text="NOTES"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/blue1" />
-
-        <EditText
-            android:id="@+id/entry_notes"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Additional Info (Optional)"
-            android:inputType="textMultiLine" />
     </LinearLayout>
 
 </ScrollView>

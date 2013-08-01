@@ -435,6 +435,13 @@ public class Util {
 		return ""+rounded;
 	}
 
+	/**
+	 * Method that takes a date string, increments the date and returns the new date string
+	 * 
+	 * @param currentCursorDate		date to be incremented
+	 * 
+	 * @return						string date object
+	 */
 	public static String incrementDate(String currentCursorDate) {
 		
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -451,6 +458,13 @@ public class Util {
 		return output;
 	}
 
+	/**
+	 * Method that takes a date string object and returns the month in text format
+	 * 
+	 * @param date		input date string
+	 * 
+	 * @return			the returned month as string object
+	 */
 	public static String getMonthText(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -466,6 +480,13 @@ public class Util {
 		return month_name;
 	}
 
+	/**
+	 * Method that takes a date string object and returns the day of the week in string format
+	 * 
+	 * @param date		input date string
+	 * 
+	 * @return			the returned day as string object
+	 */
 	public static String getDayOfWeek(String date) {
 
 		TimeZone MyTimezone = TimeZone.getDefault();
@@ -476,6 +497,13 @@ public class Util {
 		return day_name;
 	}
 
+	/**
+	 * Method that returns the following weeks dates, given a date string
+	 * 
+	 * @param date		the current week date string
+	 * 
+	 * @return			next weeks date in a string object
+	 */
 	public static String getNextWeekDates(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -503,6 +531,13 @@ public class Util {
 		return startWeek + "#" + endWeek;
 	}
 	
+	/**
+	 * Method that returns last weeks dates, given a date string
+	 * 
+	 * @param date		the current week date string
+	 * 
+	 * @return			last weeks date in a string object
+	 */
 	public static String getLastWeekDates(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -530,6 +565,12 @@ public class Util {
 		return startWeek + "#" + endWeek;
 	}
 
+	/**
+	 * Method that takes a date and returns tomorrows date
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String getTomorrowsDate(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -544,6 +585,13 @@ public class Util {
         return format.format(cal.getTime());
 	}
 	
+	/**
+	 * Method that returns next weeks date, given a date string
+	 * 
+	 * @param date		the current week date string
+	 * 
+	 * @return			last week date in a string object
+	 */
 	public static String getNextWeeksDate(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -558,6 +606,12 @@ public class Util {
         return format.format(cal.getTime());
 	}
 
+	/**
+	 * Method that takes a date and returns yesterdays date
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String getYesterdaysDate(String date) {
 		int day = Integer.parseInt(date.substring(8, 10));
 		int month = Integer.parseInt(date.substring(5, 7))-1;
@@ -571,6 +625,13 @@ public class Util {
         return format.format(cal.getTime());
 	}
 
+	/**
+	 * Method that returns date a week from input date
+	 * 
+	 * @param date		the initial date string
+	 * 
+	 * @return			next week date in a string object
+	 */
 	public static String getWeekFromDate(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -585,6 +646,12 @@ public class Util {
         return format.format(cal.getTime());
 	}
 	
+	/**
+	 * Method that takes a date and gets the date three days before it
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String getThreeDaysBeforeDate(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
@@ -598,8 +665,14 @@ public class Util {
         cal.add(Calendar.DAY_OF_MONTH, -3);   
         return format.format(cal.getTime());
 	}
-	
-public static String getThreeDaysAfterDate(String date) {
+
+	/**
+	 * Method that takes a date and gets the date three days after it
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String getThreeDaysAfterDate(String date) {
 		
 		int day = Integer.parseInt(date.substring(8, 10));
 		int month = Integer.parseInt(date.substring(5, 7))-1;

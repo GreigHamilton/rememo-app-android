@@ -2,9 +2,7 @@ package com.greighamilton.rememo.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.greighamilton.rememo.data.DatabaseHelper;
 
@@ -37,15 +35,6 @@ public class Update {
 		
 		db.onUpgrade(db, 1, 2);
 		
-		
-//		Cursor c = db.getEvents();
-//		c.moveToFirst();
-//		
-//		while (c.moveToNext()) {
-//			
-//			db.updateEvent(c.getInt(DatabaseHelper.EVENT_ID), c.getString(DatabaseHelper.EVENT_NAME), c.getString(DatabaseHelper.EVENT_DATE_TIME), c.getInt(DatabaseHelper.EVENT_CIRCLED), c.getInt(DatabaseHelper.EVENT_UNDERLINE), c.getInt(DatabaseHelper.EVENT_STARRED), c.getString(DatabaseHelper.EVENT_NOTES), 0);
-//			
-//		}
 		sp.edit().putInt("VERSION", 5).commit();
 	}
 }

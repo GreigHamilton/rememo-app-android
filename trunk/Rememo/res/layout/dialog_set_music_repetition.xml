@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- @author	Greig Hamilton -->
-<!-- Layout for set colour dialog -->
+<!-- Layout for select music dialog box -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -8,49 +8,41 @@
     android:orientation="vertical"
     android:padding="20dp" >
 
-    <!-- radio group for choices -->
-
+    <!-- radio group for musicons and earcons -->
     <RadioGroup
-        android:id="@+id/colourSelect"
+        android:id="@+id/musicRepetitionLength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/colour_red"
+            android:id="@+id/sound_rep_none"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_reminder_colour_red" />
+            android:text="No Repetition" />
         
         <RadioButton
-            android:id="@+id/colour_pink"
+            android:id="@+id/sound_rep_thirtyseconds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_reminder_colour_pink" />
-
+            android:text="30 Seconds" />
+        
         <RadioButton
-            android:id="@+id/colour_orange"
+            android:id="@+id/sound_rep_oneminute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/set_reminder_colour_orange" />
-
+            android:text="1 Minute" />
+        
         <RadioButton
-            android:id="@+id/colour_yellow"
+            android:id="@+id/sound_rep_fiveminutes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_reminder_colour_yellow" />
-
+            android:text="5 Minutes" />
+        
         <RadioButton
-            android:id="@+id/colour_green"
+            android:id="@+id/sound_rep_tenminutes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_reminder_colour_green" />
-
-        <RadioButton
-            android:id="@+id/colour_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_reminder_colour_blue" />
+            android:text="10 Minutes" />
     </RadioGroup>
 
 </LinearLayout>
