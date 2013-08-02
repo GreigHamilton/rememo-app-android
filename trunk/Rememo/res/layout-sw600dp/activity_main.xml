@@ -1,5 +1,7 @@
-<!-- @author	Greig Hamilton -->
-<!-- layout for main activity -->
+<!-- XML required for main activity layout for 7 inch displays in Rememo -->
+<!-- Created by Greig Hamilton -->
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dashboard"
     android:layout_width="fill_parent"

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- XML required for preferences feature in Rememo -->
+<!-- Created by Greig Hamilton -->
+
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     
+    <!-- Layout Preferences -->
     <PreferenceCategory
         android:key="pref_set_diary"
         android:title="Diary Layout" >
@@ -15,6 +21,8 @@
         </com.greighamilton.rememo.dialogs.DiaryDialogPreference>
     </PreferenceCategory>
     
+    
+    <!-- Colour Preferences -->
     <PreferenceCategory
         android:key="pref_set_colour_cat"
         android:title="Reminder Colours" >
@@ -38,6 +46,8 @@
         </com.greighamilton.rememo.dialogs.TextColourDialogPreference>
     </PreferenceCategory>
     
+    
+    <!-- Sound Preferences -->
     <PreferenceCategory
         android:key="pref_set_music"
         android:title="Reminder Sound" >
@@ -70,6 +80,8 @@
         </com.greighamilton.rememo.dialogs.MusicRepetitionDialogPreference>
     </PreferenceCategory>
     
+    
+    <!-- Help -->
     <PreferenceCategory
         android:key="pref_help"
         android:title="System" >

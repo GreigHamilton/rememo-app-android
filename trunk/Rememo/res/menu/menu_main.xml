@@ -1,3 +1,6 @@
+<!-- XML required for main menu in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/action_addentry"

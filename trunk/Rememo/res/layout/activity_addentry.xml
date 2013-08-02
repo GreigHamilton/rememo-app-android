@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- @author	Greig Hamilton -->
+
+<!-- XML required for add entry activity layout in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -182,7 +185,7 @@
                 android:id="@+id/show_optional_items"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SHOW OPTIONAL EVENT CUSTOMISATION"
+                android:text="SHOW MORE EVENT CUSTOMISATION"
                 android:textColor="@color/blue1" />
         
         <TextView

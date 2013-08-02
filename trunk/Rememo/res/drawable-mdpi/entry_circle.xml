@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- XML required for circling of layout in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <shape xmlns:android="http://schemas.android.com/apk/res/android" 
     android:shape="oval">
     <corners android:radius="10dip"/>

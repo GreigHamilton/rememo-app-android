@@ -1,5 +1,6 @@
-<!-- @author	Greig Hamilton -->
-<!-- Layout for music length dialog -->
+<!-- XML required for set sound length in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
-<!-- @author	Greig Hamilton -->
-<!--  Layout for reminder activity -->
+<!-- XML required for reminder activity layout in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/reminder_colour"
     android:layout_width="fill_parent"

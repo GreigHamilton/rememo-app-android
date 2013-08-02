@@ -1,5 +1,6 @@
-<!-- @author	Greig Hamilton -->
-<!-- Layout for the diary widget (daily) -->
+<!-- XML required for diary widget on daily activity in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
