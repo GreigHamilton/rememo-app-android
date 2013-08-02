@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:padding="5dp"
-            android:text="This application was developed as part of a larger project for reminder systems within the home, primarily for the over 55s. The project is housed within the School of Computing Science at the University of Glasgow. This application was developed by Greig Hamilton under the supervison of Dr Marilyn McGee-Lennon."
+            android:text="This application was developed as part of a larger project for reminder systems within the home, primarily for people over 55. The project is housed within the School of Computing Science at the University of Glasgow. This application was developed by Greig Hamilton under the supervison of Dr Marilyn McGee-Lennon."
             android:textSize="12dp" />
 
         <TextView
@@ -97,7 +97,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="clickGlasgow"
                 android:src="@drawable/ic_glasgow" />
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="clickMMH"
+                android:src="@drawable/ic_mmh" />
              
         </LinearLayout> 
     </LinearLayout>

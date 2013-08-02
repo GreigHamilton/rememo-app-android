@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -230,6 +231,9 @@ public class AddEntryActivity extends Activity {
         	
             currentId = extras.getInt("eventId");
             String eventName = extras.getString("eventName");
+            
+            Log.i("NAME FROM EXTRAS", eventName);
+            
             String eventDateTime = extras.getString("eventDateTime");
             
             String eventDate = eventDateTime.substring(8, 10) + "-" + eventDateTime.substring(5, 7) + "-" + eventDateTime.substring(0, 4);
@@ -324,8 +328,9 @@ public class AddEntryActivity extends Activity {
 			else {
 
 				// Get name data
-				String name = ((EditText) findViewById(R.id.entry_name))
-						.getText().toString();
+				String name = nameBox.getText().toString();
+				
+				Log.i("NAME FROM BOX", name);
 
 				// Get date and time
 				String date = Util.makeDateString(day, month, year);
@@ -667,11 +672,16 @@ public class AddEntryActivity extends Activity {
 				}
 
 				if (edit) {
+					
+					Log.i("NAME EDIT ENTRY", name);
+					
 					// remove the original reminder and notification
 					removeReminder(currentId, name, dateTimeText, circled, underlined, starred, notes, options);
 					
 					// update the database
 					db.updateEvent(currentId, name, date_time, circled, underlined, starred, notes, options);
+					
+					extras.clear();
 					
 					if (eventComplete == 1)
 						try {
@@ -681,6 +691,9 @@ public class AddEntryActivity extends Activity {
 						}
 				}
 				else {
+					
+					Log.i("NAME ADD ENTRY", name);
+					
 					// add event to db
 					db.addEvent(nextId, name, dateTimeText, circled, underlined, starred, notes, options);
 					
