@@ -22,6 +22,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -63,6 +64,7 @@ public class ReminderActivity extends Activity {
 	
 	private SharedPreferences sp;
 	
+	private Bundle extras;
 	
 	private TextView reminderText;
 	private LinearLayout reminderBackground;
@@ -84,6 +86,8 @@ public class ReminderActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        extras = getIntent().getExtras();
         
         // set that reminder hasnt been clicked yet
         reminderNotClicked = true;
@@ -127,13 +131,16 @@ public class ReminderActivity extends Activity {
         }
         
         // get all the extras associated with the reminder
-        eventDate = getIntent().getExtras().getString("EventDate");
-        eventId = getIntent().getExtras().getInt("EventId");
-        eventName = getIntent().getExtras().getString("EventName");
-        circled = getIntent().getExtras().getInt("EventCircled");
-		underlined = getIntent().getExtras().getInt("EventUnderlined");
-		starred = getIntent().getExtras().getInt("EventStarred");
-		eventNotes = getIntent().getExtras().getString("EventNotes");
+        eventDate = extras.getString("EventDate");
+        eventId = extras.getInt("EventId");
+        eventName = extras.getString("EventName");
+        circled = extras.getInt("EventCircled");
+		underlined = extras.getInt("EventUnderlined");
+		starred = extras.getInt("EventStarred");
+		eventNotes = extras.getString("EventNotes");
+		
+		Log.i("REM EXTRAS NAME", eventName);
+		
         
 		// get the date and time information
         year = Integer.parseInt(eventDate.substring(0, 4));
@@ -306,6 +313,8 @@ public class ReminderActivity extends Activity {
     	reminderText.setVisibility(View.VISIBLE);
     	
     	tapMeText.setVisibility(View.GONE);
+    	
+    	extras.clear();
     }
     
     /**

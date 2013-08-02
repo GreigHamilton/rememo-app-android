@@ -255,6 +255,32 @@ public class MainActivity extends Activity {
 				((WidgetAdapter) grid.getAdapter()).setWidgets(widgets);
 				grid.invalidateViews();
 			}
+			
+			// if current week, set focus to current day
+			if (selectedWeekStartDate == currentWeekStartDate) {
+				
+				// get the current dates day of week number (1-7)
+				if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Monday"))
+					grid.setSelection(0);
+				
+				else if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Tuesday"))
+					grid.setSelection(1);
+				
+				else if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Wednesday"))
+					grid.setSelection(2);
+				
+				else if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Thursday"))
+					grid.setSelection(3);
+				
+				else if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Friday"))
+					grid.setSelection(4);
+				
+				else if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Saturday"))
+					grid.setSelection(5);
+				
+				else if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Sunday"))
+					grid.setSelection(6);
+			}
 		} 
 	}
 

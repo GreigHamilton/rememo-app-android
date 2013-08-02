@@ -1,11 +1,11 @@
 package com.greighamilton.rememo;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-
-import com.greighamilton.rememo.R;
 
 /**
  * Class for About activity.
@@ -14,7 +14,9 @@ import com.greighamilton.rememo.R;
  *
  */
 public class AboutActivity extends Activity {
-     
+	
+	private static final String webGlasgow = "http://www.gla.ac.uk/schools/computing/?CFID=20180696&CFTOKEN=24912487";
+	private static final String webMMH = "http://www.multimemohome.org/";
   
     /** Called when the activity is first created. */
     @Override
@@ -32,5 +34,17 @@ public class AboutActivity extends Activity {
     public void onClickClose(View v) {
         finish();   
     }
-     
+    
+    public void clickGlasgow(View v) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(webGlasgow));
+        startActivity(Intent.createChooser(i, "Rememo"));
+    }
+
+    public void clickMMH(View v) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(webMMH));
+        startActivity(Intent.createChooser(i, "Rememo"));
+    }
+
 }
