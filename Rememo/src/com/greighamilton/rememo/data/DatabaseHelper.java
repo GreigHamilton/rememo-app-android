@@ -19,7 +19,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -210,14 +209,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
-		Log.i("UPGRADE", "UPGRADE");
-		
 		db.execSQL("ALTER TABLE EVENT ADD COLUMN options INTEGER DEFAULT 0");
 	}
 	
 	public void onUpgrade(DatabaseHelper db2, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
-		Log.i("UPGRADE DUE", "HIYAZ");
 		
 		db.execSQL("ALTER TABLE EVENT ADD COLUMN options INTEGER DEFAULT 0");
 	}

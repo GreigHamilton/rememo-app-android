@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- @author	Greig Hamilton -->
+
+<!-- XML required for strings in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <resources>
 
     <string name="app_name">Rememo</string>

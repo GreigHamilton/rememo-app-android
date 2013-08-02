@@ -1,3 +1,6 @@
+<!-- XML required for border of layout in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <stroke android:width="4dp" android:color="#BFBFBF" />
     <padding android:left="5dp" android:top="5dp"

@@ -1,7 +1,5 @@
 package com.greighamilton.rememo.dialogs;
 
-import com.greighamilton.rememo.R;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,10 +7,11 @@ import android.content.SharedPreferences;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.greighamilton.rememo.R;
 
 /**
  * Class for a ColourDialogPreference object.
@@ -47,8 +46,6 @@ public class ColourDialogPreference extends DialogPreference {
     	RadioButton blue = (RadioButton) view.findViewById(R.id.colour_blue);
      
     	RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.colourSelect);  
-    	
-    	Log.i("current colour", currentColour);
     	if (currentColour == "#F21818")
     		radioGroup.check(red.getId());
     	

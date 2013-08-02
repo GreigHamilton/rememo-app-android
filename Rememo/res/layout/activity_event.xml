@@ -1,3 +1,6 @@
+<!-- XML required for event activity layout in Rememo -->
+<!-- Created by Greig Hamilton -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/event_layout"
     android:layout_width="fill_parent"

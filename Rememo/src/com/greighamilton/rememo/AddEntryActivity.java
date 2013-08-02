@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -135,8 +134,8 @@ public class AddEntryActivity extends Activity {
      	   @Override
      	   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
      		   if (isChecked) {
-     			   remindMeBefore.setText(" also remind me at " + hour + ":" + minute
-     					   + " on " + day + "-" + month + "-" + year + ". ");
+     			   remindMeBefore.setText(" also remind me at " + ( (hour < 10) ? "0"+hour : hour ) + ":" + ( (minute < 10) ? "0"+minute : minute )
+     					   + " on " + ( (day < 10) ? "0"+day : day ) + "-" + ( (month < 10) ? "0"+month : month ) + "-" + year + ". ");
      			  remindMeNever.setEnabled(false);
      		   }
      		   else {
@@ -177,14 +176,14 @@ public class AddEntryActivity extends Activity {
         
         // get optional items checkbox
         CheckBox optionalItems = (CheckBox) findViewById(R.id.show_optional_items);
-        optionalItems.setChecked(true);
+        optionalItems.setChecked(false);
         
 		optionalItems.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						if (!isChecked) {
+						if (isChecked) {
 							// show optional widgets
 							highlightingHeading.setVisibility(View.VISIBLE);
 							optionalOne.setVisibility(View.VISIBLE);
@@ -409,8 +408,6 @@ public class AddEntryActivity extends Activity {
 				if (!remindMeNever.isChecked()) {
 					if (remindMeBefore.isChecked() || remindTime.getText().toString().equals("")) {
 						
-						Log.i("HERE2", "2");
-						
 						// ------------------------------------
 						// add alarm for event
 
@@ -491,8 +488,6 @@ public class AddEntryActivity extends Activity {
 					
 					// check if another reminder is to be created for before the event
 					if (!remindMeNever.isChecked() && !remindTime.getText().toString().matches("")) {
-						
-						Log.i("HERE1", "1");
 						
 						int repPeriod = remindPeriod.getSelectedItemPosition();
 						
@@ -793,7 +788,7 @@ public class AddEntryActivity extends Activity {
     public void populateSetDate(int year, int month, int day) {
         // Add selected date text to button
         Button button = (Button) findViewById(R.id.entry_date);
-        button.setText(day + "-" + month + "-" + year);
+        button.setText(( (day < 10) ? "0"+day : day ) + "-" + ( (month < 10) ? "0"+month : month ) + "-" + year);
     }
     
     /**
