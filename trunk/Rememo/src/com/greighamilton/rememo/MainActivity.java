@@ -259,7 +259,7 @@ public class MainActivity extends Activity {
 			// if current week, set focus to current day
 			if (selectedWeekStartDate == currentWeekStartDate) {
 				
-				// get the current dates day of week number (1-7)
+				// get the current dates day of week number (0-6) and set focus
 				if (Util.getDayOfWeek(Util.getTodaysDate()).equalsIgnoreCase("Monday"))
 					grid.setSelection(0);
 				
